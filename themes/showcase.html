@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模板库 · 模板（版式）× 主题（配色）</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background:#e9ebee; margin:0; padding:36px 16px 72px; color:#1f2937; }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  header { margin-bottom: 8px; }
+  header h1 { font-size: 26px; font-weight: 900; margin: 0 0 8px; letter-spacing: 1px; }
+  header .sub { font-size: 13px; color: #6b7280; line-height: 1.8; }
+  header .sub b { color: #111827; }
+  .tpl { background: #fff; border-radius: 16px; padding: 26px 26px 30px; margin: 26px 0; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+  .tpl-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .tpl-no { font-family: Menlo, Consolas, monospace; font-size: 12px; font-weight: 900; color: #b0b5bd; }
+  .tpl-name { font-size: 18px; font-weight: 900; }
+  .tpl-tag { font-size: 11px; font-weight: 700; color: #6b7280; background: #f3f4f6; border-radius: 999px; padding: 3px 10px; }
+  .tpl-desc { font-size: 13px; color: #6b7280; margin: 8px 0 4px; line-height: 1.8; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; }
+  .swatch { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #e2e5e9; background: #fff; border-radius: 999px; padding: 5px 12px 5px 6px; cursor: pointer; font-size: 12px; color: #374151; transition: all .15s; }
+  .swatch:hover { border-color: #9ca3af; }
+  .swatch.active { border-color: #111827; box-shadow: 0 0 0 2px rgba(17,24,39,.12); font-weight: 700; color: #111827; }
+  .swatch .dot { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(0,0,0,.08); }
+  .sheet { border-radius: 12px; border: 1px solid #e5e7eb; padding: 30px 26px; background: var(--sheet); color: var(--t); max-width: 660px; margin: 14px auto 0;
+           --ghost: color-mix(in srgb, var(--p) 18%, var(--sheet));
+           --dots-mid: color-mix(in srgb, var(--p) 45%, var(--sheet));
+           --hl: color-mix(in srgb, var(--s) 42%, var(--sheet));
+           --code-bg: color-mix(in srgb, var(--c) 14%, var(--sheet));
+           --hairline: color-mix(in srgb, var(--c) 35%, var(--sheet));
+  }
+  .sheet p { margin: 0 0 16px; }
+  .sheet figcaption, .sheet .caption { font-size: 11px; color: var(--c); }
+  .swatch-note { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+  footer { font-size: 12px; color: #9ca3af; text-align: center; margin-top: 40px; line-height: 1.8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>模板库</h1>
+  <div class="sub">
+    <b>模板 = 版式结构</b>（标题长什么样、分隔线怎么画、图片怎么框），<b>主题 = 配色</b>（颜色）。
+    两个维度互相独立：点每个模板下面的色卡换主题色，模板结构不变。
+    生产管线对应：结构由 <b>apply_template.py --template</b> 生成，配色由 <b>wewrite preview --theme</b> 注入。
+  </div>
+</header>
+
+<!-- ================= 1 通用极简 ================= -->
+<section class="tpl" id="tpl-plain">
+  <div class="tpl-head"><span class="tpl-no">01</span><span class="tpl-name">通用极简</span><span class="tpl-tag">纯 CSS · 无结构变换</span></div>
+  <div class="tpl-desc">这是内置主题的<b>真实版式</b>（github 主题原样：灰色发丝线、无彩色强调；颜色跟随所选配色以保证可读）。注意：内置主题和自定义主题都是<b>固定皮肤</b>，下面色卡只能换代码/链接色；「模板 × 配色」随意组合只对 03–08 的结构变换层生效。教程类默认已改走 07 知识点卡。</div>
+  <div class="swatches" data-sheet="sheet-plain"></div>
+  <div class="sheet sheet-plain" id="sheet-plain" style="--p:#0969da; --s:#0550ae; --s-text:#0550ae; --on-p:#ffffff; --t:#1f2328; --h:#111827; --c:#656d76; --sheet:#ffffff; --fm:#f6f8fa;">
+    <h1 style="font-size:22px; font-weight:600; color:var(--t); border-bottom:1px solid var(--hairline); padding-bottom:10px; margin:0 0 18px; line-height:1.4;">稿子写不下去的那晚</h1>
+    <p style="font-size:15px; line-height:1.75; color:var(--t);">深夜两点，<strong style="font-weight:600; color:var(--t);">AI 凑过来一句"我帮你把逻辑理顺一下"</strong>，那一刻我只想合上电脑。现在的写作 AI 都在抢着替你写，可你要的不是通顺，是<em>有个东西顺着你的情绪</em>。</p>
+    <blockquote style="margin:20px 0; padding:12px 16px; border-left:4px solid var(--hairline); background:var(--fm); border-radius:6px; font-size:14px; line-height:1.75; color:var(--t);">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</blockquote>
+    <h2 style="font-size:19px; font-weight:600; color:var(--t); margin:26px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--hairline);">第一个：情绪化写作</h2>
+    <p style="font-size:15px; line-height:1.75; color:var(--t);">小节一的正文，看看 <code style="background:var(--code-bg); color:var(--p); padding:2px 6px; border-radius:4px; font-size:13px;">inline code</code> 的效果。写不下去的时候，工具不该催你，该陪你。</p>
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMjgwIj48cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjI4MCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjMyMCIgeT0iMTQwIiBmb250LXNpemU9IjIwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIj5TQ1JFRU5TSE9UPC90ZXh0Pjwvc3ZnPg==" style="max-width:100%; border-radius:6px; display:block; margin:18px auto;">
+    <hr style="border:none; border-top:1px solid var(--hairline); margin:26px 0;">
+    <h2 style="font-size:19px; font-weight:600; color:var(--t); margin:26px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--hairline);">第二个：Qoder 的答案</h2>
+    <ul style="margin:12px 0; padding-left:24px;"><li style="font-size:15px; line-height:1.75; color:var(--t);">顺着情绪写，不抢方向盘</li><li style="font-size:15px; line-height:1.75; color:var(--t);">改哪里由你拍板</li></ul>
+  </div>
+</section>
+
+<!-- ================= 2 卡片标题 ================= -->
+<section class="tpl" id="tpl-card">
+  <div class="tpl-head"><span class="tpl-no">02</span><span class="tpl-name">卡片标题</span><span class="tpl-tag">纯 CSS · 无结构变换</span></div>
+  <div class="tpl-desc">标题做成带顶色条的圆角卡片，小节标题带左色条 + 渐变底线。品牌感强、有仪式感，适合官方教程、周报、合集。ai-practice 专属主题即此骨架。</div>
+  <div class="swatches" data-sheet="sheet-card"></div>
+  <div class="sheet sheet-card" id="sheet-card" style="--p:#0f766e; --s:#d97706; --s-text:#b45309; --on-p:#ffffff; --t:#1f2937; --h:#134e4a; --c:#9ca3af; --sheet:#ffffff; --fm:#f0fdfa;">
+    <h1 style="font-size:20px; font-weight:800; color:var(--h); margin:8px 0 22px; padding:24px 20px; border:1px solid color-mix(in srgb, var(--p) 20%, var(--sheet)); border-radius:14px; background-image:linear-gradient(90deg, var(--p) 0%, var(--s) 100%), linear-gradient(180deg, var(--fm) 0%, var(--sheet) 60%); background-size:100% 4px, 100% 100%; background-position:0 0, 0 0; background-repeat:no-repeat, no-repeat; box-shadow:0 4px 16px color-mix(in srgb, var(--p) 8%, transparent); line-height:1.45;">稿子写不下去的那晚</h1>
+    <p style="font-size:15px; line-height:1.9; color:var(--t);">深夜两点，<strong style="color:var(--p); font-weight:700;">AI 凑过来一句"我帮你把逻辑理顺一下"</strong>，那一刻我只想合上电脑。可你要的不是通顺，是<em>有个东西顺着你的情绪</em>。</p>
+    <blockquote style="margin:20px 0; padding:12px 16px; border-left:4px solid var(--p); background:var(--fm); font-size:14px; line-height:1.9; color:var(--t);">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</blockquote>
+    <h2 style="font-size:17px; font-weight:700; color:var(--h); margin:30px 0 14px; padding:4px 0 10px 14px; border-left:4px solid var(--p); background-image:linear-gradient(90deg, var(--p) 35%, var(--s) 70%, transparent 100%); background-size:100% 2px; background-position:0 100%; background-repeat:no-repeat; line-height:1.4;">第一个：情绪化写作</h2>
+    <p style="font-size:15px; line-height:1.9; color:var(--t);">小节一的正文，看看 <code style="background:var(--fm); color:var(--p); padding:2px 6px; border-radius:4px; font-size:13px;">inline code</code> 的效果。写不下去的时候，工具不该催你，该陪你。</p>
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMjgwIj48cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjI4MCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjMyMCIgeT0iMTQwIiBmb250LXNpemU9IjIwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIj5TQ1JFRU5TSE9UPC90ZXh0Pjwvc3ZnPg==" style="max-width:100%; border-radius:8px; display:block; margin:18px auto;">
+    <hr style="border:none; border-top:1px solid var(--hairline); margin:26px 0;">
+    <h2 style="font-size:17px; font-weight:700; color:var(--h); margin:30px 0 14px; padding:4px 0 10px 14px; border-left:4px solid var(--p); background-image:linear-gradient(90deg, var(--p) 35%, var(--s) 70%, transparent 100%); background-size:100% 2px; background-position:0 100%; background-repeat:no-repeat; line-height:1.4;">第二个：Qoder 的答案</h2>
+    <ul style="margin:12px 0; padding-left:24px;"><li style="font-size:15px; line-height:1.9;">顺着情绪写，不抢方向盘</li><li style="font-size:15px; line-height:1.9;">改哪里由你拍板</li></ul>
+  </div>
+</section>
+
+<!-- ================= 3 编辑部杂志风 ================= -->
+<section class="tpl" id="tpl-kazk">
+  <div class="tpl-head"><span class="tpl-no">03</span><span class="tpl-name">编辑部杂志风</span><span class="tpl-tag">结构变换 · apply_template.py</span></div>
+  <div class="tpl-desc">学自卡兹克《用了全新Qoder回不去了》：超大斜体幽灵数字小节号、荧光笔划重点、宋体大字引言、图片四角裁切框 + FIG 编号、三色圆点分隔线。适合体验记、观点文、故事型长文。</div>
+  <div class="swatches" data-sheet="sheet-kazk"></div>
+  <div class="sheet sheet-kazk" id="sheet-kazk" style="--p:#059669; --s:#fde68a; --s-text:#a3821f; --on-p:#ffffff; --t:#111827; --h:#111827; --c:#9ca3af; --sheet:#ffffff; --fm:#f9fafb;">
+    <h1 style="font-size:20px; font-weight:900; color:var(--h); margin:0 0 18px; padding:0 12px 10px; background-image:linear-gradient(90deg, var(--hl) 0%, rgba(255,255,255,0) 100%); background-size:88px 3px; background-position:12px 100%; background-repeat:no-repeat; line-height:1.4;">稿子写不下去的那晚</h1>
+    <p style="font-size:14px; line-height:1.9; text-align:justify; color:var(--t); padding:0 12px;">深夜两点，<strong style="font-weight:600; color:var(--t); background-image:linear-gradient(120deg, var(--hl) 0%, rgba(255,255,255,0) 100%); padding:0 4px; border-radius:2px;">AI 凑过来一句"我帮你把逻辑理顺一下"</strong>，<em style="font-style:italic; text-decoration:underline;">那一刻我只想合上电脑</em>。现在的写作 AI 都在抢着替你写，可你要的不是通顺。</p>
+    <blockquote style="margin:28px 12px; padding:4px 10px; border:none; border-left:4px solid var(--s);"><p style="margin:0; font-family:'Songti SC','Noto Serif CJK SC','Source Han Serif SC',SimSun,serif; font-size:16px; font-weight:900; line-height:1.8; color:var(--t); text-align:left;">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</p></blockquote>
+    <section style="margin:44px 0 24px; padding:0 12px;"><section style="display:flex; align-items:center; gap:12px;"><p style="margin:0; font-size:60px; font-weight:900; font-style:italic; color:var(--ghost); line-height:0.9; letter-spacing:-4px;">01</p><section><p style="margin:0; font-size:18px; font-weight:900; color:var(--h); line-height:1.25;">第一个：情绪化写作</p><p style="margin:4px 0 0; font-family:Menlo,Consolas,monospace; font-size:9px; font-weight:700; color:var(--c); line-height:1; letter-spacing:1.5px;">WRITING / EMOTION</p></section></section></section>
+    <p style="font-size:14px; line-height:1.9; text-align:justify; color:var(--t); padding:0 12px;">小节一的正文，看看 <code style="font-family:Menlo,Consolas,monospace; font-size:13px; background:var(--code-bg); color:var(--p); padding:2px 6px; border-radius:4px;">inline code</code> 的效果。写不下去的时候，工具不该催你，该陪你。</p>
+    <section style="margin:24px 0; padding:0 8px;">
+      <section style="display:flex; justify-content:space-between; margin-bottom:-9px;"><span style="display:block; width:28px; height:18px; border-top:2px solid var(--t); border-left:2px solid var(--t); font-size:0; line-height:0;"><br/></span><span style="display:block; width:28px; height:18px; border-top:2px solid var(--t); border-right:2px solid var(--t); font-size:0; line-height:0;"><br/></span></section>
+      <section style="margin:0 8px; border-radius:4px; overflow:hidden; line-height:0;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMjgwIj48cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjI4MCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjMyMCIgeT0iMTQwIiBmb250LXNpemU9IjIwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIj5TQ1JFRU5TSE9UPC90ZXh0Pjwvc3ZnPg==" style="max-width:100%;"></section>
+      <section style="display:flex; justify-content:space-between; margin-top:-9px;"><span style="display:block; width:28px; height:18px; border-bottom:2px solid var(--t); border-left:2px solid var(--t); font-size:0; line-height:0;"><br/></span><span style="display:block; width:28px; height:18px; border-bottom:2px solid var(--t); border-right:2px solid var(--t); font-size:0; line-height:0;"><br/></span></section>
+      <section style="display:flex; justify-content:space-between; margin:7px 8px 0;"><span style="font-family:Menlo,Consolas,monospace; font-size:10px; font-weight:800; color:var(--t); letter-spacing:1px;">FIG.01</span><span style="font-size:11px; font-weight:700; color:var(--c); text-align:right; line-height:1.4;">界面截图演示</span></section>
+    </section>
+    <section style="display:flex; align-items:center; justify-content:center; gap:10px; margin:28px 0;"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--p); line-height:0; font-size:0;">&nbsp;</span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--dots-mid); line-height:0; font-size:0;">&nbsp;</span><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--s-text); line-height:0; font-size:0;">&nbsp;</span></section>
+    <section style="margin:44px 0 24px; padding:0 12px;"><section style="display:flex; align-items:center; gap:12px;"><p style="margin:0; font-size:60px; font-weight:900; font-style:italic; color:var(--ghost); line-height:0.9; letter-spacing:-4px;">02</p><section><p style="margin:0; font-size:18px; font-weight:900; color:var(--h); line-height:1.25;">第二个：Qoder 的答案</p><p style="margin:4px 0 0; font-family:Menlo,Consolas,monospace; font-size:9px; font-weight:700; color:var(--c); line-height:1; letter-spacing:1.5px;">QODER / ANSWER</p></section></section></section>
+    <ul style="margin:12px 0; padding-left:28px;"><li style="font-size:14px; line-height:1.9; text-align:justify;">顺着情绪写，不抢方向盘</li><li style="font-size:14px; line-height:1.9; text-align:justify;">改哪里由你拍板</li></ul>
+  </div>
+</section>
+
+<!-- ================= 4 演讲金句风 ================= -->
+<section class="tpl" id="tpl-bold">
+  <div class="tpl-head"><span class="tpl-no">04</span><span class="tpl-name">演讲金句风</span><span class="tpl-tag">结构变换 · apply_template.py</span></div>
+  <div class="tpl-desc">大留白 + 粗黑顶线标题 + 编号前缀，引用块变成整块主色金句卡（白字居中）。观点密集、金句多的文章用，一句一个锤。bold-contrast 专属主题即此骨架。</div>
+  <div class="swatches" data-sheet="sheet-bold"></div>
+  <div class="sheet sheet-bold" id="sheet-bold" style="--p:#111827; --s:#f59e0b; --s-text:#b45309; --on-p:#ffffff; --t:#1f2937; --h:#111827; --c:#9ca3af; --sheet:#ffffff; --fm:#f9fafb;">
+    <h1 style="font-size:22px; font-weight:900; letter-spacing:1px; color:var(--h); margin:14px 0 20px; padding:18px 0 0; border-top:6px solid var(--p); line-height:1.5;">稿子写不下去的那晚</h1>
+    <p style="font-size:15px; line-height:2; color:var(--t);">深夜两点，<strong style="font-weight:700; color:var(--h);">AI 凑过来一句"我帮你把逻辑理顺一下"</strong>，那一刻我只想合上电脑。<em style="font-style:normal; font-weight:700; color:var(--s-text);">可你要的不是通顺。</em></p>
+    <blockquote style="margin:32px 0; padding:26px 24px; background:var(--p); border:none; border-radius:4px; text-align:center;"><p style="margin:0; font-size:16px; font-weight:700; line-height:1.9; color:var(--on-p); letter-spacing:0.5px; text-align:center;">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</p></blockquote>
+    <h2 style="font-size:17px; font-weight:900; letter-spacing:0.5px; color:var(--h); margin:40px 0 16px; padding:14px 0 0; border-top:2px solid var(--p); line-height:1.5;"><span style="font-family:Menlo,Consolas,monospace; font-weight:900; color:var(--s-text); margin-right:10px; font-size:14px;">01 /</span>第一个：情绪化写作</h2>
+    <p style="font-size:15px; line-height:2; color:var(--t);">小节一的正文，看看 <code style="font-family:Menlo,Consolas,monospace; font-size:13px; background:var(--code-bg); color:var(--h); padding:2px 6px; border-radius:3px;">inline code</code> 的效果。写不下去的时候，工具不该催你，该陪你。</p>
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMjgwIj48cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjI4MCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjMyMCIgeT0iMTQwIiBmb250LXNpemU9IjIwIiBmaWxsPSIjOWNhM2FmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIj5TQ1JFRU5TSE9UPC90ZXh0Pjwvc3ZnPg==" style="max-width:100%; border-radius:4px; display:block; margin:20px auto;">
+    <hr style="border:none; height:2px; width:56px; margin:36px auto; background:var(--p);">
+    <h2 style="font-size:17px; font-weight:900; letter-spacing:0.5px; color:var(--h); margin:40px 0 16px; padding:14px 0 0; border-top:2px solid var(--p); line-height:1.5;"><span style="font-family:Menlo,Consolas,monospace; font-weight:900; color:var(--s-text); margin-right:10px; font-size:14px;">02 /</span>第二个：Qoder 的答案</h2>
+    <ul style="margin:12px 0; padding-left:26px;"><li style="font-size:15px; line-height:2;">顺着情绪写，不抢方向盘</li><li style="font-size:15px; line-height:2;">改哪里由你拍板</li></ul>
+  </div>
+</section>
+
+<!-- ================= 5 问答气泡风 ================= -->
+<section class="tpl" id="tpl-qa">
+  <div class="tpl-head"><span class="tpl-no">05</span><span class="tpl-name">问答气泡风</span><span class="tpl-tag">结构变换 · apply_template.py</span></div>
+  <div class="tpl-desc">小节标题变成「问」徽章 + 聊天气泡，一问一答自带节奏。适合 FAQ、产品测评、自问自答式的科普。</div>
+  <div class="swatches" data-sheet="sheet-qa"></div>
+  <div class="sheet" id="sheet-qa" style="--p:#07c160; --s:#05934b; --s-text:#05934b; --on-p:#ffffff; --t:#111827; --h:#111827; --c:#9ca3af; --sheet:#ffffff; --fm:#f0faf4;">
+    <h1 style="font-size:20px; font-weight:800; color:var(--h); border-bottom:2px solid var(--p); padding-bottom:10px; margin:0 0 18px; line-height:1.4;">写作 AI 怎么选？五个高频问题</h1>
+    <section style="display:flex; align-items:flex-start; gap:10px; margin:26px 0 14px;"><span style="flex-shrink:0; display:inline-block; width:24px; height:24px; border-radius:50%; background:var(--p); color:var(--on-p); font-size:13px; font-weight:700; line-height:24px; text-align:center;">问</span><section style="flex:1; background:var(--fm); border-radius:2px 10px 10px 10px; padding:10px 14px;"><p style="margin:0; font-size:15px; font-weight:800; color:var(--h); line-height:1.6;">写不下去的时候，工具该干嘛？</p></section></section>
+    <p style="font-size:15px; line-height:1.9; color:var(--t);">不该催你，该陪你。<strong style="color:var(--s-text); font-weight:700;">顺着你的情绪，引你把话接着写下去</strong>，而不是替你把文章写完。</p>
+    <blockquote style="margin:18px 0; padding:12px 16px; border-left:4px solid var(--p); background:var(--fm); border-radius:0 8px 8px 0; font-size:14px; line-height:1.9; color:var(--t);">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</blockquote>
+    <section style="display:flex; align-items:flex-start; gap:10px; margin:26px 0 14px;"><span style="flex-shrink:0; display:inline-block; width:24px; height:24px; border-radius:50%; background:var(--p); color:var(--on-p); font-size:13px; font-weight:700; line-height:24px; text-align:center;">问</span><section style="flex:1; background:var(--fm); border-radius:2px 10px 10px 10px; padding:10px 14px;"><p style="margin:0; font-size:15px; font-weight:800; color:var(--h); line-height:1.6;">新手最该在意的功能是哪个？</p></section></section>
+    <p style="font-size:15px; line-height:1.9; color:var(--t);">看看 <code style="background:var(--fm); color:var(--s); padding:2px 6px; border-radius:4px; font-size:13px;">inline code</code> 这样的细节处理，以及改哪里由你拍板。</p>
+  </div>
+</section>
+
+<!-- ================= 6 时间线日志风 ================= -->
+<section class="tpl" id="tpl-timeline">
+  <div class="tpl-head"><span class="tpl-no">06</span><span class="tpl-name">时间线日志风</span><span class="tpl-tag">结构变换 · apply_template.py</span></div>
+  <div class="tpl-desc">小节标题变成时间轴节点（圆点 + 下垂轴线），文章像日志一样往前推进。适合踩坑记录、上手过程、Day N 式连载。</div>
+  <div class="swatches" data-sheet="sheet-timeline"></div>
+  <div class="sheet" id="sheet-timeline" style="--p:#4f46e5; --s:#818cf8; --s-text:#4f46e5; --on-p:#ffffff; --t:#1f2937; --h:#312e81; --c:#9ca3af; --sheet:#ffffff; --fm:#eef2ff;">
+    <h1 style="font-size:20px; font-weight:800; color:var(--h); border-left:5px solid var(--p); padding-left:12px; margin:0 0 18px; line-height:1.4;">上手一整天，我踩了这些坑</h1>
+    <section style="display:flex; align-items:center; gap:10px; margin:30px 0 0;"><span style="flex-shrink:0; display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--p); line-height:0; font-size:0;">&nbsp;</span><p style="margin:0; font-size:16px; font-weight:800; color:var(--h); line-height:1.5;">上午：装好就开跑</p></section>
+    <section style="margin:8px 0 0 5px; width:0; height:20px; border-left:2px solid color-mix(in srgb, var(--p) 28%, var(--sheet)); line-height:0; font-size:0;">&nbsp;</section>
+    <p style="font-size:15px; line-height:1.9; color:var(--t);">第一版跑通了，但 <code style="background:var(--fm); color:var(--p); padding:2px 6px; border-radius:4px; font-size:13px;">inline code</code> 的配置差点劝退，最后发现是路径写错。</p>
+    <blockquote style="margin:18px 0; padding:6px 14px; border-left:3px solid var(--p); font-size:14px; line-height:1.9; color:var(--t);">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</blockquote>
+    <section style="display:flex; align-items:center; gap:10px; margin:30px 0 0;"><span style="flex-shrink:0; display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--p); line-height:0; font-size:0;">&nbsp;</span><p style="margin:0; font-size:16px; font-weight:800; color:var(--h); line-height:1.5;">下午：找到正确的用法</p></section>
+    <section style="margin:8px 0 0 5px; width:0; height:20px; border-left:2px solid color-mix(in srgb, var(--p) 28%, var(--sheet)); line-height:0; font-size:0;">&nbsp;</section>
+    <ul style="margin:12px 0; padding-left:26px;"><li style="font-size:15px; line-height:1.9;">顺着情绪写，不抢方向盘</li><li style="font-size:15px; line-height:1.9;">改哪里由你拍板</li></ul>
+  </div>
+</section>
+
+<!-- ================= 7 知识点卡风 ================= -->
+<section class="tpl" id="tpl-knowledge">
+  <div class="tpl-head"><span class="tpl-no">07</span><span class="tpl-name">知识点卡风</span><span class="tpl-tag">结构变换 · apply_template.py</span></div>
+  <div class="tpl-desc">小节标题变成浅底圆角知识卡 + 数字章，一节一个知识点，条理感强。适合干货科普、名词解释、清单式要点。</div>
+  <div class="swatches" data-sheet="sheet-knowledge"></div>
+  <div class="sheet" id="sheet-knowledge" style="--p:#2563eb; --s:#f59e0b; --s-text:#b45309; --on-p:#ffffff; --t:#1f2937; --h:#1e3a8a; --c:#9ca3af; --sheet:#ffffff; --fm:#eff6ff;">
+    <h1 style="font-size:20px; font-weight:800; color:var(--h); border-bottom:2px solid var(--p); padding-bottom:10px; margin:0 0 18px; line-height:1.4;">三个概念，看懂 AI 写作工具</h1>
+    <section style="background:var(--fm); border-radius:8px; padding:10px 14px; margin:26px 0 14px; display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; font-family:Menlo,Consolas,monospace; font-size:12px; font-weight:800; color:var(--on-p); background:var(--p); border-radius:4px; padding:2px 7px;">01</span><p style="margin:0; font-size:15px; font-weight:800; color:var(--h); line-height:1.5;">情绪化写作</p></section>
+    <p style="font-size:15px; line-height:1.9; color:var(--t);">工具不该催你，该<strong style="font-weight:700; color:var(--h); background-image:linear-gradient(120deg, var(--fm) 0%, rgba(255,255,255,0) 100%); padding:0 3px; border-radius:2px;">顺着你的情绪</strong>。看看 <code style="background:var(--fm); color:var(--p); padding:2px 6px; border-radius:4px; font-size:13px;">inline code</code>。</p>
+    <blockquote style="margin:18px 0; padding:12px 16px; border-left:4px solid var(--s); background:color-mix(in srgb, var(--s) 8%, var(--sheet)); border-radius:0 8px 8px 0; font-size:14px; line-height:1.9; color:var(--s-text);">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</blockquote>
+    <section style="background:var(--fm); border-radius:8px; padding:10px 14px; margin:26px 0 14px; display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; font-family:Menlo,Consolas,monospace; font-size:12px; font-weight:800; color:var(--on-p); background:var(--p); border-radius:4px; padding:2px 7px;">02</span><p style="margin:0; font-size:15px; font-weight:800; color:var(--h); line-height:1.5;">改稿权归属</p></section>
+    <ul style="margin:12px 0; padding-left:26px;"><li style="font-size:15px; line-height:1.9;">顺着情绪写，不抢方向盘</li><li style="font-size:15px; line-height:1.9;">改哪里由你拍板</li></ul>
+  </div>
+</section>
+
+<!-- ================= 8 报刊墨渍风 ================= -->
+<section class="tpl" id="tpl-press">
+  <div class="tpl-head"><span class="tpl-no">08</span><span class="tpl-name">报刊墨渍风</span><span class="tpl-tag">结构变换 · apply_template.py</span></div>
+  <div class="tpl-desc">衬线字、居中大标题、双细线、「一、二、三」中文编号，像一份严肃小报。适合深度分析、行业观察、书面感强的长文。</div>
+  <div class="swatches" data-sheet="sheet-press"></div>
+  <div class="sheet" id="sheet-press" style="--p:#1a1a1a; --s:#b91c1c; --s-text:#b91c1c; --on-p:#ffffff; --t:#262626; --h:#1a1a1a; --c:#8c8c8c; --sheet:#ffffff; --fm:#f7f5f0; font-family:Georgia,'Songti SC','Noto Serif CJK SC',SimSun,serif;">
+    <h1 style="font-size:22px; font-weight:900; letter-spacing:2px; color:var(--h); text-align:center; margin:10px 0 22px; padding:16px 0 14px; border-top:4px double var(--p); border-bottom:1px solid var(--p); line-height:1.5;">AI 写作工具的这一年</h1>
+    <p style="font-size:15px; line-height:2; color:var(--t); text-align:justify;">深夜两点，<strong style="font-weight:900; color:var(--h);">AI 凑过来一句"我帮你把逻辑理顺一下"</strong>，那一刻我只想合上电脑。<em style="font-style:normal; color:var(--s); font-weight:700;">可你要的不是通顺。</em></p>
+    <blockquote style="margin:24px 0; padding:4px 24px; text-align:center;"><p style="margin:0; font-size:16px; font-weight:700; color:var(--h); text-align:center; letter-spacing:1px; line-height:1.9;">全程我一行代码没写，但做什么、手感对不对，都是我拍的板。</p></blockquote>
+    <h2 style="font-size:17px; font-weight:900; letter-spacing:1px; color:var(--h); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px solid color-mix(in srgb, var(--c) 45%, var(--sheet));">一、情绪化写作的回潮</h2>
+    <p style="font-size:15px; line-height:2; color:var(--t); text-align:justify;">小节一的正文，看看 <code style="font-family:Menlo,Consolas,monospace; font-size:13px; background:var(--fm); color:var(--s); padding:2px 6px; border-radius:2px;">inline code</code> 的效果。写不下去的时候，工具不该催你，该陪你。</p>
+    <hr style="border:none; border-top:3px double var(--p); margin:28px 0;">
+    <h2 style="font-size:17px; font-weight:900; letter-spacing:1px; color:var(--h); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px solid color-mix(in srgb, var(--c) 45%, var(--sheet));">二、下一个答案</h2>
+    <ul style="margin:12px 0; padding-left:26px;"><li style="font-size:15px; line-height:2;">顺着情绪写，不抢方向盘</li><li style="font-size:15px; line-height:2;">改哪里由你拍板</li></ul>
+  </div>
+</section>
+
+<footer>
+  展示页仅供挑选，正式排版在流程里自动完成：结构 = apply_template.py --template，配色 = wewrite preview --theme。<br>
+  03/04/05/06/07/08 号模板结构由脚本确定性生成；01/02 号纯 CSS。加新模板 = 新变换函数 + 在 theme-selection.md 登记；加新配色 = 新主题 yaml。
+</footer>
+</div>
+
+<script>
+const PALETTES = {
+  kazk:    { label: "翠绿琥珀", p:"#059669", s:"#fde68a", t:"#111827", h:"#111827", c:"#9ca3af", sheet:"#ffffff", fm:"#f9fafb" },
+  aip:     { label: "深青琥珀", p:"#0f766e", s:"#d97706", t:"#1f2937", h:"#134e4a", c:"#9ca3af", sheet:"#ffffff", fm:"#f0fdfa" },
+  red:     { label: "正红",     p:"#dc2626", s:"#991b1b", t:"#1f2937", h:"#111827", c:"#6b7280", sheet:"#ffffff", fm:"#fef2f2" },
+  token:   { label: "朱红金",   p:"#b91c1c", s:"#b45309", t:"#27211e", h:"#7c2d12", c:"#8a7d75", sheet:"#ffffff", fm:"#fff7e8" },
+  bold:    { label: "黑金",     p:"#111827", s:"#f59e0b", t:"#1f2937", h:"#111827", c:"#9ca3af", sheet:"#ffffff", fm:"#f9fafb" },
+  sspai:   { label: "少数派红", p:"#c7372f", s:"#d4524b", t:"#333333", h:"#111827", c:"#888888", sheet:"#ffffff", fm:"#fdf5f4" },
+  paper:   { label: "报纸棕",   p:"#8b4513", s:"#a0522d", t:"#2c2416", h:"#2c2416", c:"#5c4a3a", sheet:"#ffffff", fm:"#f0eade" },
+  purple:  { label: "科技紫",   p:"#7c3aed", s:"#3b82f6", t:"#333333", h:"#111827", c:"#666666", sheet:"#ffffff", fm:"#f8f5ff" },
+  navy:    { label: "墨蓝",     p:"#1e3a5f", s:"#2c5282", t:"#1a1a2e", h:"#111827", c:"#4a5568", sheet:"#ffffff", fm:"#f0f4f8" },
+  rose:    { label: "玫红",     p:"#be185d", s:"#db2777", t:"#3d1f2e", h:"#111827", c:"#7a5068", sheet:"#ffffff", fm:"#fce7f3" },
+  night:   { label: "暗夜",     p:"#60a5fa", s:"#93c5fd", t:"#e2e8f0", h:"#f1f5f9", c:"#94a3b8", sheet:"#172040", fm:"#1f2b52" },
+  wechat:  { label: "微信绿",   p:"#07c160", s:"#05934b", t:"#111827", h:"#111827", c:"#9ca3af", sheet:"#ffffff", fm:"#f0faf4" },
+  indigo:  { label: "靛蓝",     p:"#4f46e5", s:"#818cf8", t:"#1f2937", h:"#312e81", c:"#9ca3af", sheet:"#ffffff", fm:"#eef2ff" },
+  know:    { label: "知识蓝",   p:"#2563eb", s:"#f59e0b", t:"#1f2937", h:"#1e3a8a", c:"#9ca3af", sheet:"#ffffff", fm:"#eff6ff" },
+  ink:     { label: "墨黑朱砂", p:"#1a1a1a", s:"#b91c1c", t:"#262626", h:"#1a1a1a", c:"#8c8c8c", sheet:"#ffffff", fm:"#f7f5f0" },
+};
+function lum(hex){ hex = hex.replace("#",""); const r=parseInt(hex.slice(0,2),16)/255, g=parseInt(hex.slice(2,4),16)/255, b=parseInt(hex.slice(4,6),16)/255; return .2126*r+.7152*g+.0722*b; }
+function mix(a,b,t){ a=a.replace("#",""); b=b.replace("#",""); const A=[0,2,4].map(i=>parseInt(a.slice(i,i+2),16)), B=[0,2,4].map(i=>parseInt(b.slice(i,i+2),16)); return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); }
+const VARS = ["--p","--s","--t","--h","--c","--sheet","--fm"];
+document.querySelectorAll(".swatches").forEach(row => {
+  const sheet = document.getElementById(row.dataset.sheet);
+  const DEFAULTS = { "sheet-plain": "gh", "sheet-card": "aip", "sheet-kazk": "kazk", "sheet-bold": "bold",
+                     "sheet-qa": "wechat", "sheet-timeline": "indigo", "sheet-knowledge": "know", "sheet-press": "ink" };
+  PALETTES.gh = { label: "极客蓝", p:"#0969da", s:"#0550ae", t:"#1f2328", h:"#111827", c:"#656d76", sheet:"#ffffff", fm:"#f6f8fa" };
+  Object.entries(PALETTES).forEach(([key, pal]) => {
+    const btn = document.createElement("button");
+    btn.className = "swatch"; btn.type = "button"; btn.dataset.key = key;
+    btn.innerHTML = '<span class="dot" style="background:' + pal.p + '"></span><span class="dot" style="background:' + pal.s + '; margin-left:-13px; border:2px solid #fff"></span>' + pal.label;
+    btn.addEventListener("click", () => apply(key, sheet, row));
+    row.appendChild(btn);
+  });
+  apply(DEFAULTS[sheet.id], sheet, row);
+});
+function apply(key, sheet, row){
+  const pal = PALETTES[key];
+  VARS.forEach(v => sheet.style.setProperty(v, pal[v.slice(2)] || pal[{"--p":"p","--s":"s","--t":"t","--h":"h","--c":"c","--sheet":"sheet","--fm":"fm"}[v]]));
+  const darkSheet = lum(pal.sheet) < 0.5;
+  let sText = pal.s;
+  if (darkSheet && lum(pal.s) < 0.45) sText = mix(pal.s, "#ffffff", 0.45);
+  if (!darkSheet && lum(pal.s) > 0.72) sText = mix(pal.s, "#111827", 0.45);
+  sheet.style.setProperty("--s-text", sText);
+  sheet.style.setProperty("--on-p", lum(pal.p) > 0.6 ? "#111827" : "#ffffff");
+  row.querySelectorAll(".swatch").forEach(b => b.classList.toggle("active", b.dataset.key === key));
+}
+</script>
+</body>
+</html>

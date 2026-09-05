@@ -1,0 +1,257 @@
+name: "ai-practice"
+description: "AI练习生专属：深青+琥珀双色，hero 标题卡 + 渐变细线，克制圆角，反AI味科技感"
+aigc_footer: false
+colors:
+  primary: "#0f766e"
+  secondary: "#d97706"
+  text: "#1f2937"
+  text_light: "#6b7280"
+  text_heading: "#134e4a"
+  text_caption: "#9ca3af"
+  background: "#ffffff"
+  background_light: "#f0fdfa"
+  code_bg: "#1e293b"
+  code_color: "#e2e8f0"
+  quote_border: "#0f766e"
+  quote_bg: "#f0fdfa"
+  highlight_bg: "#fffbeb"
+  summary_bg: "#f0fdfa"
+  border_radius: "10px"
+  darkmode:
+    background: "#111827"
+    text: "#c8c8c8"
+    text_light: "#999999"
+    text_heading: "#e5e7eb"
+    primary: "#2dd4bf"
+    secondary: "#fbbf24"
+    code_bg: "#0b1220"
+    code_color: "#d4d4d4"
+    quote_bg: "#12332f"
+    quote_border: "#2dd4bf"
+    highlight_bg: "#2a2518"
+base_css: |
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.9;
+    letter-spacing: 0.2px;
+    color: #1f2937;
+    background: #ffffff;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px;
+    word-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* h1: hero 标题卡 —— 顶部深青→琥珀细条 + 浅青底 + 轻阴影，紧凑但克制 */
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1.45;
+    color: #134e4a;
+    margin: 24px 0 24px 0;
+    padding: 26px 22px 24px 22px;
+    border: 1px solid rgba(15, 118, 110, 0.2);
+    border-radius: 14px;
+    background-color: #ffffff;
+    background-image: linear-gradient(90deg, #0f766e 0%, #d97706 100%), linear-gradient(180deg, #f4fbf9 0%, #ffffff 60%);
+    background-size: 100% 4px, 100% 100%;
+    background-position: 0 0, 0 0;
+    background-repeat: no-repeat, no-repeat;
+    box-shadow: 0 4px 16px rgba(15, 118, 110, 0.08);
+  }
+
+  /* h2: 左色条 + 深青→琥珀渐变细下划线 */
+  h2 {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: #134e4a;
+    margin: 32px 0 14px 0;
+    padding: 4px 0 10px 14px;
+    border-left: 4px solid #0f766e;
+    background-image: linear-gradient(90deg, #0f766e 35%, #d97706 70%, rgba(217, 119, 6, 0) 100%);
+    background-size: 100% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    line-height: 1.4;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #134e4a;
+    margin: 24px 0 12px 0;
+    padding-left: 12px;
+    border-left: 3px solid #0f766e;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 20px 0 10px 0;
+    line-height: 1.4;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.9;
+    letter-spacing: 0.2px;
+    color: #1f2937;
+    margin: 14px 0;
+  }
+
+  /* strong: 深青加粗，克制不加底色 */
+  strong {
+    font-weight: 700;
+    color: #0f766e;
+  }
+
+  /* 金句强调：琥珀色，反AI味暖点缀 */
+  strong em, em strong {
+    color: #b45309;
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  /* 中文不用斜体 */
+  em {
+    font-style: normal;
+    color: #1f2937;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, "JetBrains Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    background: rgba(15, 118, 110, 0.08);
+    color: #0f766e;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #f3faf8;
+    color: #134e4a;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 118, 110, 0.16);
+    box-shadow: 0 1px 5px rgba(15, 118, 110, 0.05);
+    overflow-x: auto;
+    margin: 16px 0;
+    line-height: 1.6;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  pre code {
+    font-family: "SFMono-Regular", Consolas, "JetBrains Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    background: none;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  blockquote {
+    border-left: 4px solid #0f766e;
+    background: #f0fdfa;
+    margin: 16px 0;
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    color: #1f2937;
+  }
+
+  blockquote p {
+    margin: 8px 0;
+    color: #374151;
+  }
+
+  ul {
+    padding-left: 24px;
+    margin: 12px 0;
+    list-style-type: disc;
+  }
+
+  ul li::marker {
+    color: #0f766e;
+  }
+
+  ol {
+    padding-left: 24px;
+    margin: 12px 0;
+  }
+
+  ol li::marker {
+    color: #d97706;
+    font-weight: 700;
+  }
+
+  li {
+    font-size: 16px;
+    line-height: 1.9;
+    letter-spacing: 0.2px;
+    color: #1f2937;
+    margin: 6px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 15px;
+  }
+
+  thead {
+    background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+    color: #ffffff;
+  }
+
+  th {
+    color: #ffffff;
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border: 1px solid #0f766e;
+  }
+
+  td {
+    padding: 10px 14px;
+    border: 1px solid #e5e7eb;
+    color: #1f2937;
+  }
+
+  tbody tr {
+    background: #ffffff;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f8fafc;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 24px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(31, 41, 55, 0.08);
+  }
+
+  a {
+    color: #0f766e;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, #0f766e, #d97706, transparent);
+    margin: 28px 0;
+  }

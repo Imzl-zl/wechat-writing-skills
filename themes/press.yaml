@@ -1,0 +1,113 @@
+name: "press"
+description: "报刊墨渍风：衬线居中大标题 + 双细线 + 「一、二、三」编号（结构用 apply_template.py --template press --theme press 生成），墨黑+朱砂红，适合深度分析"
+aigc_footer: false
+colors:
+  primary: "#1a1a1a"
+  secondary: "#b91c1c"
+  text: "#262626"
+  text_light: "#595959"
+  text_heading: "#1a1a1a"
+  text_caption: "#8c8c8c"
+  background: "#ffffff"
+  background_light: "#f7f5f0"
+  code_bg: "#1e293b"
+  code_color: "#e2e8f0"
+  quote_border: "#b91c1c"
+  quote_bg: "#f7f5f0"
+  highlight_bg: "#f5e6c8"
+  summary_bg: "#f7f5f0"
+  border_radius: "2px"
+  darkmode:
+    background: "#111111"
+    text: "#d4d4d4"
+    text_light: "#a3a3a3"
+    text_heading: "#f5f5f5"
+    primary: "#e5e5e5"
+    secondary: "#ef4444"
+    code_bg: "#1e1e1e"
+    code_color: "#d4d4d4"
+    quote_bg: "#1c1c1c"
+    quote_border: "#ef4444"
+    highlight_bg: "#3a2a1a"
+base_css: |
+  body {
+    font-family: Georgia, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun, serif;
+    font-size: 15px;
+    line-height: 2;
+    color: #262626;
+    background: #ffffff;
+    max-width: 677px;
+    margin: 0 auto;
+    padding: 20px 12px;
+    word-wrap: break-word;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    text-align: center;
+    margin: 30px 0 22px 0;
+    padding: 16px 0 14px 0;
+    border-top: 4px double #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #1a1a1a;
+    margin: 32px 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d9d2c4;
+  }
+
+  h3 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin: 22px 0 10px 0; }
+
+  p { font-size: 15px; line-height: 2; color: #262626; margin: 0 0 16px 0; text-align: justify; }
+
+  strong { font-weight: 900; color: #1a1a1a; }
+  em { font-style: normal; color: #b91c1c; font-weight: 700; }
+
+  blockquote {
+    margin: 24px 0;
+    padding: 4px 24px;
+    border: none;
+    background: transparent;
+    text-align: center;
+  }
+  blockquote p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 13px;
+    background: #f7f5f0;
+    color: #b91c1c;
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 2px; overflow-x: auto; margin: 16px 0; }
+  pre code { background: none; color: #e2e8f0; padding: 0; }
+
+  ul, ol { padding-left: 26px; margin: 12px 0 16px 0; }
+  li { font-size: 15px; line-height: 2; color: #262626; margin: 6px 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { background: #1a1a1a; color: #ffffff; font-weight: 700; padding: 9px 12px; text-align: left; border: 1px solid #1a1a1a; }
+  td { padding: 9px 12px; border: 1px solid #d9d2c4; color: #262626; }
+
+  img { max-width: 100%; height: auto; display: block; margin: 18px auto; border-radius: 2px; }
+
+  a { color: #b91c1c; text-decoration: none; font-weight: 700; }
+  hr { border: none; border-top: 3px double #1a1a1a; margin: 28px 0; }

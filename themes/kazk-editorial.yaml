@@ -1,0 +1,211 @@
+name: "kazk-editorial"
+description: "编辑部杂志风（学自数字生命卡兹克《用了全新Qoder回不去了》）：14px 紧凑正文+两端对齐，琥珀荧光笔强调，宋体大字引言，灰阶+翠绿点缀。带模板层：h2→幽灵数字小节、---→三色圆点线、图→四角裁切框，用 apply_template.py --template kazk-editorial 启用"
+aigc_footer: false
+colors:
+  primary: "#059669"
+  secondary: "#fde68a"
+  text: "#111827"
+  text_light: "#6b7280"
+  text_heading: "#111827"
+  text_caption: "#9ca3af"
+  background: "#ffffff"
+  background_light: "#f9fafb"
+  code_bg: "#1e293b"
+  code_color: "#e2e8f0"
+  quote_border: "#111827"
+  quote_bg: "#f9fafb"
+  highlight_bg: "#fef3c7"
+  summary_bg: "#f9fafb"
+  border_radius: "8px"
+  darkmode:
+    background: "#0b1220"
+    text: "#d1d5db"
+    text_light: "#9ca3af"
+    text_heading: "#f3f4f6"
+    primary: "#34d399"
+    secondary: "#fbbf24"
+    code_bg: "#111827"
+    code_color: "#d4d4d4"
+    quote_bg: "#151f31"
+    quote_border: "#34d399"
+    highlight_bg: "#3a2f14"
+base_css: |
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.2px;
+    color: #111827;
+    background: #ffffff;
+    max-width: 677px;
+    margin: 0 auto;
+    padding: 20px 12px;
+    word-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* h1: 文内大标题——紧凑黑体 + 琥珀短底线 */
+  h1 {
+    font-size: 20px;
+    font-weight: 900;
+    color: #111827;
+    margin: 28px 0 18px 0;
+    padding: 0 12px 10px 12px;
+    line-height: 1.4;
+    background-image: linear-gradient(90deg, #fde68a 0%, rgba(253, 230, 138, 0) 100%);
+    background-size: 88px 3px;
+    background-position: 12px 100%;
+    background-repeat: no-repeat;
+  }
+
+  /* h2: 小节标题——15px/800 克制黑体；装饰版式靠 apply_template.py 结构变换 */
+  h2 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.6;
+    margin: 30px 0 14px 0;
+    padding: 0 12px;
+    border-left: 4px solid #111827;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #111827;
+    margin: 22px 0 10px 0;
+    padding: 0 12px;
+  }
+
+  /* p: 14px/1.9 两端对齐——参考文的核心正文手感 */
+  p {
+    font-size: 14px;
+    line-height: 1.9;
+    text-align: justify;
+    color: #111827;
+    margin: 0 0 16px 0;
+    padding: 0 12px;
+  }
+
+  /* strong: 琥珀荧光笔划重点（参考文的标志性强调） */
+  strong {
+    font-weight: 600;
+    color: #111827;
+    background-image: linear-gradient(120deg, #fde68a 0%, rgba(255, 255, 255, 0) 100%);
+    padding: 0 4px;
+    border-radius: 2px;
+  }
+
+  /* em: 斜体+下划线——语气转折句专用 */
+  em {
+    font-style: italic;
+    text-decoration: underline;
+    color: #111827;
+  }
+
+  /* blockquote: 宋体大字引言——正文里的"提词器" */
+  blockquote {
+    margin: 28px 12px;
+    padding: 4px 10px;
+    border: none;
+    border-left: 4px solid #fde68a;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  blockquote p {
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun, serif;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1.8;
+    color: #111827;
+    text-align: left;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 13px;
+    background: #f3f4f6;
+    color: #059669;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+
+  pre code {
+    background: none;
+    color: #e2e8f0;
+    padding: 0;
+    border-radius: 0;
+    font-size: 13px;
+  }
+
+  ul, ol {
+    padding-left: 28px;
+    margin: 12px 0 16px 0;
+  }
+
+  li {
+    font-size: 14px;
+    line-height: 1.9;
+    text-align: justify;
+    color: #111827;
+    margin: 6px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  th {
+    background: #111827;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 9px 12px;
+    text-align: left;
+    border: 1px solid #111827;
+  }
+
+  td {
+    padding: 9px 12px;
+    border: 1px solid #e5e7eb;
+    color: #111827;
+  }
+
+  tr:nth-child(even) { background: #f9fafb; }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 12px auto;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+
+  a {
+    color: #059669;
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(5, 150, 105, 0.35);
+  }
+
+  /* hr: 三色圆点分隔线的纯 CSS 近似（灰线居中收窄） */
+  hr {
+    border: none;
+    height: 1px;
+    margin: 28px 12px;
+    background-image: linear-gradient(90deg, rgba(229, 231, 235, 0) 0%, #e5e7eb 20%, #e5e7eb 80%, rgba(229, 231, 235, 0) 100%);
+  }

@@ -1,0 +1,205 @@
+name: "token-rhythm-benefit"
+description: "基元律动邀请福利：朱红与琥珀色，突出额度、领取条件和链接"
+aigc_footer: false
+colors:
+  primary: "#b91c1c"
+  secondary: "#b45309"
+  text: "#27211e"
+  text_light: "#70655e"
+  text_heading: "#7f1d1d"
+  text_caption: "#8a7d75"
+  background: "#fffdf8"
+  background_light: "#fff7e8"
+  code_bg: "#2a1712"
+  code_color: "#fff7ed"
+  quote_border: "#b91c1c"
+  quote_bg: "#fff3e6"
+  highlight_bg: "#fff8e8"
+  highlight_border: "#f0c46d"
+  summary_bg: "#fff3e6"
+  border_radius: "8px"
+  darkmode:
+    background: "#1c1512"
+    text: "#f5ebe4"
+    text_light: "#c0aea3"
+    text_heading: "#fecaca"
+    primary: "#fb7185"
+    secondary: "#fbbf24"
+    code_bg: "#120c0a"
+    code_color: "#fff7ed"
+    quote_bg: "#2a1813"
+    quote_border: "#fb7185"
+    highlight_bg: "#2a2111"
+base_css: |
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    color: #27211e;
+    background: #fffdf8;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 18px;
+    word-wrap: break-word;
+  }
+
+  h1 {
+    font-size: 25px;
+    font-weight: 800;
+    color: #7f1d1d;
+    margin: 28px 0 18px;
+    padding: 16px;
+    border: 1px solid #f0c46d;
+    border-top: 5px solid #b91c1c;
+    border-radius: 8px;
+    background: #fff8e8;
+    line-height: 1.45;
+  }
+
+  h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 30px 0 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #b91c1c;
+    line-height: 1.45;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #7f1d1d;
+    margin: 24px 0 10px;
+    padding-left: 10px;
+    border-left: 3px solid #d97706;
+    line-height: 1.45;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #27211e;
+    margin: 13px 0;
+  }
+
+  strong {
+    font-weight: 700;
+    color: #b91c1c;
+  }
+
+  em {
+    font-style: italic;
+    color: #70655e;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    background: #fff1e6;
+    color: #9a3412;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #2a1712;
+    color: #fff7ed;
+    padding: 15px 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 16px 0;
+    line-height: 1.65;
+    border-left: 4px solid #f59e0b;
+  }
+
+  pre code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    background: none;
+    color: #fff7ed;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  blockquote {
+    border-left: 4px solid #b91c1c;
+    background: #fff3e6;
+    margin: 16px 0;
+    padding: 13px 16px;
+    border-radius: 0 8px 8px 0;
+    color: #4b3b35;
+  }
+
+  blockquote p {
+    margin: 6px 0;
+    color: #4b3b35;
+  }
+
+  ul, ol {
+    padding-left: 24px;
+    margin: 12px 0;
+  }
+
+  li {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #27211e;
+    margin: 7px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 15px;
+  }
+
+  thead {
+    background: #b91c1c;
+  }
+
+  th {
+    color: #ffffff;
+    font-weight: 700;
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid #b91c1c;
+  }
+
+  td {
+    padding: 10px 12px;
+    border: 1px solid #eeded2;
+    color: #27211e;
+  }
+
+  tr {
+    background: #fffdf8;
+  }
+
+  tr:nth-child(even) {
+    background: #fff8f1;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 22px auto;
+    border-radius: 8px;
+    border: 1px solid #f1e2d7;
+  }
+
+  a {
+    color: #b91c1c;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  hr {
+    border: none;
+    height: 2px;
+    background: #f0c46d;
+    margin: 26px 0;
+  }

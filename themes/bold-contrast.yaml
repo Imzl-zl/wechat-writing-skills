@@ -1,0 +1,195 @@
+name: "bold-contrast"
+description: "演讲金句风：大留白 + 粗黑顶线标题 + 黑底白字居中金句卡，适合观点密集、金句多的文章"
+aigc_footer: false
+colors:
+  primary: "#111827"
+  secondary: "#f59e0b"
+  text: "#1f2937"
+  text_light: "#6b7280"
+  text_heading: "#111827"
+  text_caption: "#9ca3af"
+  background: "#ffffff"
+  background_light: "#f9fafb"
+  code_bg: "#111827"
+  code_color: "#f9fafb"
+  quote_border: "#111827"
+  quote_bg: "#111827"
+  highlight_bg: "#fef3c7"
+  summary_bg: "#f9fafb"
+  border_radius: "4px"
+  darkmode:
+    background: "#0b1220"
+    text: "#d1d5db"
+    text_light: "#9ca3af"
+    text_heading: "#f9fafb"
+    primary: "#fbbf24"
+    secondary: "#fbbf24"
+    code_bg: "#111827"
+    code_color: "#d4d4d4"
+    quote_bg: "#151f31"
+    quote_border: "#fbbf24"
+    highlight_bg: "#3a2f14"
+base_css: |
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 15px;
+    line-height: 2;
+    letter-spacing: 0.3px;
+    color: #1f2937;
+    background: #ffffff;
+    max-width: 677px;
+    margin: 0 auto;
+    padding: 20px 12px;
+    word-wrap: break-word;
+  }
+
+  /* h1: 大留白 + 全宽粗黑顶线 */
+  h1 {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #111827;
+    margin: 36px 0 20px 0;
+    padding: 18px 0 0 0;
+    border-top: 6px solid #111827;
+    line-height: 1.5;
+  }
+
+  /* h2: 编号感顶线（细黑线 + 琥珀短线叠加） */
+  h2 {
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #111827;
+    margin: 40px 0 16px 0;
+    padding: 14px 0 0 0;
+    border-top: 2px solid #111827;
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin: 24px 0 10px 0;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 2;
+    color: #1f2937;
+    margin: 0 0 18px 0;
+  }
+
+  strong {
+    font-weight: 700;
+    color: #111827;
+  }
+
+  em {
+    font-style: normal;
+    font-weight: 700;
+    color: #b45309;
+  }
+
+  /* blockquote: 黑底白字居中金句卡——全主题的记忆点 */
+  blockquote {
+    margin: 32px 0;
+    padding: 26px 24px;
+    background: #111827;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  blockquote p {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.9;
+    color: #f9fafb;
+    text-align: center;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 13px;
+    background: #f3f4f6;
+    color: #111827;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  pre {
+    background: #111827;
+    color: #f9fafb;
+    padding: 16px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 18px 0;
+    line-height: 1.7;
+  }
+
+  pre code {
+    background: none;
+    color: #f9fafb;
+    padding: 0;
+  }
+
+  ul, ol {
+    padding-left: 26px;
+    margin: 12px 0 18px 0;
+  }
+
+  li {
+    font-size: 15px;
+    line-height: 2;
+    color: #1f2937;
+    margin: 8px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 14px;
+  }
+
+  th {
+    background: #111827;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid #111827;
+  }
+
+  td {
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    color: #1f2937;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 4px;
+  }
+
+  a {
+    color: #111827;
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 2px solid #f59e0b;
+  }
+
+  hr {
+    border: none;
+    height: 2px;
+    width: 56px;
+    margin: 36px auto;
+    background: #111827;
+  }

@@ -1,0 +1,16 @@
+# 私人状态与凭证（如把本仓库放进内容项目时）
+config.yaml
+*.secret
+runs/
+history.yaml
+current_run/
+corpus/
+exemplars/
+lessons/
+output/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
