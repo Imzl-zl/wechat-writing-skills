@@ -1,5 +1,5 @@
 name: "kazk-editorial"
-description: "编辑部杂志风（学自数字生命卡兹克《用了全新Qoder回不去了》）：14px 紧凑正文+两端对齐，琥珀荧光笔强调，宋体大字引言，灰阶+翠绿点缀。带模板层：h2→幽灵数字小节、---→三色圆点线、图→四角裁切框，用 apply_template.py --template kazk-editorial 启用"
+description: "编辑部杂志风（幽灵数字小节+荧光笔强调+宋体引言的杂志排版）：14px 紧凑正文+两端对齐，琥珀荧光笔强调，宋体大字引言，灰阶+翠绿点缀。带模板层：h2→幽灵数字小节、---→三色圆点线、图→四角裁切框，用 apply_template.py --template kazk-editorial 启用"
 aigc_footer: false
 colors:
   primary: "#059669"
