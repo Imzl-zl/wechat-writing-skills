@@ -68,7 +68,6 @@ cp wechat-writing-skills/themes/*.yaml <你的项目>/.wewrite/themes/
 
 - [imraywang/wewrite](https://github.com/imraywang/wewrite)（MIT）—— 上游全流程框架与 CLI
 - [数字生命卡兹克 KKKKhazix/khazix-skills](https://github.com/KKKKhazix/khazix-skills)（MIT）—— 活人感写作方法论（living-voice 人格与审稿分层）
-- 卡兹克《用了全新Qoder回不去了》—— 编辑部杂志风模板的原型
 
 ## License
 
