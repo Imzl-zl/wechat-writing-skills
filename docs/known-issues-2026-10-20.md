@@ -25,6 +25,9 @@
 
 ### 根因
 
+> 以下描述的是**问题发生当时**的状态（2026-10-20 之前），不是现状。
+> 哪些已修、哪些没修，见第四节清单。
+
 **1. 长度下限是硬编码的，与内容类型无关**
 
 - `skills/wewrite-write/SKILL.md:106`：「正文通常 1200-2500 字」
@@ -60,14 +63,16 @@
 用户在同一场会话里纠正了三次（掰开揉碎 / 太玄幻 / 别加私活），全部只存在于
 对话上下文，没有落成规则文件。**每次新会话都要重新犯一遍。**
 
-### 建议改法
+### 改法
+
+实施状态见第四节清单。
 
 | 位置 | 改什么 |
 |---|---|
 | `skills/wewrite-write/references/article-brief.md` | 增加体裁字段（如 `content_type: announcement \| tutorial \| analysis \| story`）。`announcement` 类允许 `desired_length: "600-900 字"`，且明确「不因字数不足而扩展议题」 |
 | `skills/wewrite-write/references/frameworks-quick.md` | 增加「发布声明」框架：目标 → 事实清单 → 边界与例外 → 截止时间。不设「再深一层」的推进逻辑 |
 | `skills/wewrite-review/SKILL.md` | 五项判断增加第六项「**守界**」：逐条核对 `brief.constraints.must_avoid`，命中即改稿，不给分 |
-| `skills/wewrite-review/references/editorial-quality.md` | 「无关段落删除」改成可判定的表述：读者读完这一段，是否知道了新的、原本不知道的**且他本来想知道的事**？否则删 |
+| `skills/wewrite-write/references/editorial-quality.md` | 「无关段落删除」改成可判定的表述：读者读完这一段，是否知道了新的、原本不知道的**且他本来想知道的事**？否则删 |
 | `skills/wewrite-write/SKILL.md:106` | 「正文通常 1200-2500 字」改为按体裁取值，并补一句「体裁不匹配时长时，先削议题再削字数」 |
 
 ---
@@ -129,13 +134,15 @@ qoder-qwen38-flash-free\make_cover.py     2960 bytes  09-18  ← 这次被复用
 
 现有闸门只比字节。配色重复、版式重复、同账号封面看起来一样 —— 全都检测不到。
 
-### 建议改法
+### 改法
+
+实施状态见第四节清单。
 
 | 位置 | 改什么 |
 |---|---|
-| `skills/wewrite-visual/SKILL.md` | 补一条：**不要把上一篇文章目录里的 `make_cover.py` 当模板**；封面脚本只有 `.wewrite/tools/make_cover.py` 一份是权威的 |
+| `skills/wewrite-visual/SKILL.md` | 补一条：**不要把上一篇文章目录里的 `make_cover.py` 当模板**；封面脚本只有 `skills/wewrite-visual/scripts/make_cover.py` 一份是权威的 |
 | `skills/wewrite-visual/references/visual-guide.md` | 补一条「**看历史封面再定配色**」：写 `cover-design.json` 前先扫项目内近 5 篇封面的主色，选一个没撞的 |
-| `.wewrite/tools/make_cover.py` | 去重闸门增加**配色维度**：成品主色与项目内已有封面主色相同（且非同一文章）时报警；可选 `--palette` 强制指定 |
+| `skills/wewrite-visual/scripts/make_cover.py` | 去重闸门增加**配色维度**：成品主色与项目内已有封面主色相同（且非同一文章）时报警（`--check-palette`） |
 | `.wewrite/style.yaml` | `cover_style` 改成实际生效的规范，或删掉换成 `cover_palette` 字段。**一个没人读的字段比没有字段更危险** —— 它会让 Agent 以为已经设过 |
 | 文档层 | 把「artcraft 那篇刻意不用深青」的教训从文章目录提到 skill 顶层，别再只存在某一篇里 |
 
@@ -159,16 +166,7 @@ qoder-qwen38-flash-free\make_cover.py     2960 bytes  09-18  ← 这次被复用
 
 同步后仓库与工作区 0 处不一致，模板 8 个、主题 11 套。
 
-### 新增：同步流程与脚本
-
-漂移的根因是没有同步步骤，所以同步做成了显式动作：
-
-- `tools/sync_skills.py` —— 双向同步 + 一致性检查
-  - `--to project` 仓库 → 内容项目
-  - `--to repo` 内容项目 → 仓库
-  - `--check` 只检查差异（退出码 0 = 一致）
-  - `--dry-run` 预演
-- `docs/sync-workflow.md` —— 流程说明、触发时机、各自独有的东西
+回灌用的脚本在 `tools/sync_skills.py`（`--to repo` / `--to project` / `--check`）。
 
 ### 仍需人工处理的两项
 
@@ -194,7 +192,7 @@ qoder-qwen38-flash-free\make_cover.py     2960 bytes  09-18  ← 这次被复用
 
 ---
 
-## 四、本次改动清单（供 review）
+## 四、改动清单
 
 在 `D:\sudy\myproject\wechat-writing-skills` 下实施：
 
