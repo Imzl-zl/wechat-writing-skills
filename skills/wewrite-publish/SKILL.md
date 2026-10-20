@@ -56,21 +56,25 @@ wewrite run step publish in_progress
    knowledge），再按第 2 节映射**先定模板（版式结构）、再定主题（配色）**——默认配色随模板，
    用户想换色随时只换 `--theme`。判型结果（类型 + 模板 + 配色 + 一句话理由）要在回复里
    告诉用户。
-2. **套模板结构**：主题 ≠ 模板。主题只是 CSS 皮肤；`kazk-editorial`、`bold-contrast`
-   注册了模板层（标题装饰/分隔线/图片框的确定性问题变换）。选了带模板层的主题时，先跑
+2. **套模板结构**：主题 ≠ 模板。主题只是 CSS 皮肤；模板层（包括 `tutorial-dashboard`）
+   负责标题装饰、分隔线、图片框和教程信息组件等确定性结构变换。选了带模板层的排版时，先跑
    `{skill_dir}/scripts/apply_template.py` 把 markdown 重写成版式结构再渲染，**不许跳过、
    也不许手工即兴改**，否则模板就退化成"换个颜色的普通主题"：
 
 ```bash
 PYTHONIOENCODING=utf-8 python {skill_dir}/scripts/apply_template.py {article} \
-  --template {选定主题} [--theme {配色主题}] --labels '{"小节标题": "ENGLISH / LABEL", ...}' -o {decorated_md}
-wewrite preview {decorated_md} --theme {选定主题} --no-open -o {preview}
+  --template {选定模板} [--theme {选定配色}] --labels '{"小节标题": "ENGLISH / LABEL", ...}' -o {decorated_md}
+wewrite preview {decorated_md} --theme {选定配色} --no-open -o {preview}
 ```
 
 `--theme` 可让模板结构穿任意配色（如 `--template kazk-editorial --theme ai-practice` =
 编辑部版式 × 深青琥珀配色），省略时用模板原生配色。用户说"结构不变换个颜色"就只改
-`--theme`。`--labels` 的英文小标签由 AI 按各小节主旨拟定（这是判断活，脚本不编）；拿不准
-就省略，脚本用 SECTION 0N 兜底。没注册模板层的主题（内置 8 个 + red-pastel 等）直接用
+`--theme`。`tutorial-dashboard` 需要复原问题卡、标签云、流程条、连接参数卡、提醒/总结/行动区时，
+在 frontmatter 的 `tutorial_dashboard.blocks` 配置数据，并用
+`<!-- tutorial-dashboard:<block> -->` 放在正文中的目标位置；每个已配置组件都必须恰好有一个对应插槽，
+否则脚本会报错，避免内容被放到不确定的位置。没有这些数据时仍按普通教程结构生成。
+`--labels` 的英文小标签由 AI 按各小节主旨拟定（这是判断活，脚本不编）；拿不准
+就省略，脚本用 SECTION 0N 兜底。没注册模板层的主题（内置主题及 red-pastel 等）直接用
 原 markdown。模板库可视化展示页（模板 × 配色矩阵，给用户挑选用）：
 `.wewrite/output/theme-gallery/showcase.html`。
 3. **渲染最终预览**，有任务时保存到 `artifacts.preview`；任务外文章保存到原文件旁：
@@ -138,7 +142,7 @@ wewrite run step publish completed
 
 | 用户说 | 动作 |
 |---|---|
-| 看模板/换配色 | 打开 `.wewrite/output/theme-gallery/showcase.html`（8 模板 × 15 配色，点色卡即换）；`wewrite gallery` 只是裸 markdown 对比，看不出结构层，别拿它当模板库 |
+| 看模板/换配色 | 打开 `.wewrite/output/theme-gallery/showcase.html`（9 模板 × 15 配色，点色卡即换）；`wewrite gallery` 只是裸 markdown 对比，看不出结构层，别拿它当模板库 |
 | 换主题 | 重新 preview；只有再次明确要求才重新 publish |
 | 做图片帖 | 先确认用户确实要推草稿箱，再执行 `wewrite image-post` |
 | 只排版 | 只 preview |

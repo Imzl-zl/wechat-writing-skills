@@ -1,0 +1,208 @@
+name: "muppet-editorial"
+description: "编辑部简报风：暖米底 + 炭黑信息条 + 橙色重点下划线（带模板层）"
+aigc_footer: false
+colors:
+  primary: "#242424"
+  secondary: "#fc5d1e"
+  text: "#4a4a4a"
+  text_light: "#666666"
+  text_heading: "#292929"
+  text_caption: "#9a9a9a"
+  background: "#f7f4f0"
+  background_light: "#eae5e0"
+  code_bg: "#242424"
+  code_color: "#f7f4f0"
+  quote_border: "#fc5d1e"
+  quote_bg: "#eae5e0"
+  highlight_bg: "#ece7e1"
+  highlight_border: "#fc5d1e"
+  summary_bg: "#eae5e0"
+  border_radius: "6px"
+  darkmode:
+    background: "#1b1a19"
+    text: "#d6d1cb"
+    text_light: "#a8a19a"
+    text_heading: "#f2ece6"
+    primary: "#3f3d3b"
+    secondary: "#ff7a45"
+    code_bg: "#141312"
+    code_color: "#f7f4f0"
+    quote_bg: "#262422"
+    quote_border: "#ff7a45"
+    highlight_bg: "#2b2927"
+base_css: |
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #4a4a4a;
+    background: #f7f4f0;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 22px 18px;
+    word-wrap: break-word;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #292929;
+    margin: 0 0 12px;
+    line-height: 1.22;
+    letter-spacing: -0.3px;
+  }
+
+  h2 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #292929;
+    margin: 34px 0 14px;
+    padding: 0 0 8px;
+    border-bottom: 1px solid #e6e2dd;
+    line-height: 1.4;
+  }
+
+  h3 {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #292929;
+    background: #ece7e1;
+    border: 1px solid #e6e2dd;
+    border-radius: 999px;
+    padding: 3px 12px;
+    margin: 20px 0 8px;
+    line-height: 1.6;
+  }
+
+  h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #292929;
+    margin: 20px 0 10px;
+    line-height: 1.5;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.9;
+    color: #4a4a4a;
+    margin: 0 0 14px;
+  }
+
+  strong {
+    font-weight: 600;
+    color: #292929;
+    border-bottom: 2px solid #fc5d1e;
+  }
+
+  em {
+    font-style: italic;
+    color: #666666;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    background: #ece7e1;
+    color: #b8431a;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #242424;
+    color: #f7f4f0;
+    padding: 15px 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 16px 0;
+    line-height: 1.7;
+  }
+
+  pre code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    background: none;
+    color: #f7f4f0;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  blockquote {
+    border-left: 3px solid #fc5d1e;
+    background: #eae5e0;
+    margin: 16px 0;
+    padding: 14px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #4a4a4a;
+  }
+
+  blockquote p {
+    margin: 6px 0;
+    color: #4a4a4a;
+  }
+
+  ul, ol {
+    padding-left: 22px;
+    margin: 0 0 14px;
+  }
+
+  li {
+    font-size: 14px;
+    line-height: 1.85;
+    color: #4a4a4a;
+    margin: 6px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 13px;
+  }
+
+  thead {
+    background: #eae5e0;
+  }
+
+  th {
+    color: #292929;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid #e6e2dd;
+  }
+
+  td {
+    padding: 10px 12px;
+    border: 1px solid #e6e2dd;
+    color: #4a4a4a;
+  }
+
+  tr {
+    background: #f7f4f0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 22px auto;
+    border-radius: 6px;
+  }
+
+  a {
+    color: #b8431a;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid #fc5d1e;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background: #e6e2dd;
+    margin: 26px 0;
+  }
