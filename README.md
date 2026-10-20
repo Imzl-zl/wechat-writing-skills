@@ -49,8 +49,23 @@
 ## 已知问题
 
 见 [`docs/known-issues-2026-10-20.md`](docs/known-issues-2026-10-20.md)——记录了写作端
-「内容扩展 / 掰开揉碎」与封面端「配色重复」两类问题的实测根因、建议改法，以及本仓库
-相对工作区的同步缺口（缺 2 个模板、2 套主题、1 份测试）。
+「内容扩展 / 掰开揉碎」与封面端「配色重复」两类问题的实测根因、修复情况，以及仍需人工
+处理的两项。
+
+## 双工作区同步
+
+本仓库是 skill 的**唯一来源**，内容项目里有一份副本供 Agent 读取。改 skill 在这里改，
+同步用脚本：
+
+```bash
+python tools/sync_skills.py --to project   # 仓库 → 内容项目
+python tools/sync_skills.py --to repo      # 内容项目 → 仓库（回灌）
+python tools/sync_skills.py --check         # 一致性检查，退出码 0 = 一致
+```
+
+**不回灌就会漂移**——2026-09 到 10-20 期间工作区改了 5 个 skill 文件、2 个模板、2 套主题、
+1 份测试，全部没回灌，仓库停在 9 月初。流程细节见
+[`docs/sync-workflow.md`](docs/sync-workflow.md)。
 
 ## 安装
 

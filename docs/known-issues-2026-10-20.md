@@ -3,6 +3,9 @@
 来源：写一篇「Qoder + WorkBuddy 免费模型盘点」福利文时的实际返工。这不是设想，
 是同一篇稿子被用户打回两次的真实过程。
 
+**状态（2026-10-20）**：第一、二节的问题已修复并提交（commit `d89f3d2`）；
+第三节的仓库同步已完成。仍需人工处理两项，见第三节末尾。
+
 ---
 
 ## 一、写作端：内容扩展 / 掰开揉碎
@@ -138,72 +141,56 @@ qoder-qwen38-flash-free\make_cover.py     2960 bytes  09-18  ← 这次被复用
 
 ---
 
-## 三、仓库同步状态（切工作区时先看这里）
+## 三、仓库同步状态（已完成）
 
-### 仓库落后于工作区
+### 已回灌
 
-`D:\sudy\myproject\wechat-writing-skills` 只有 3 个提交，最后一个是 9-05
-左右的初始版本。**9 月之后工作区的全部演化都没回灌仓库。**
+仓库此前停在 9-05 的初始版本，9 月之后工作区的演化全部没回灌。
+2026-10-20 已一次性同步完毕（commit `d89f3d2`）：
 
-逐文件比对（`skills/` 下，排除 `__pycache__`），5 个文件内容不一致，
-**全部是工作区比仓库新**：
+| 项 | 内容 |
+|---|---|
+| skill 文件 | 回灌 5 个：`wewrite-visual/SKILL.md`、`visual-guide.md`、`wewrite-publish/SKILL.md`、`theme-selection.md`、`apply_template.py` |
+| 模板层 | 补 `muppet-editorial`、`tutorial-dashboard` 两个模板实现（`apply_template.py` +1800 行） |
+| 主题 | 补 `emerald-tutorial.yaml`、`muppet-editorial.yaml` |
+| 测试 | 补 `skills/wewrite-publish/tests/test_tutorial_dashboard.py`（20 passed） |
+| 封面脚本 | `make_cover.py` 从工作区 `.wewrite/tools/` 收进 `skills/wewrite-visual/scripts/`，不再依赖工作区路径 |
+| aihot | 纳入仓库同步范围（原为工作区独有） |
 
-| 文件 | 仓库 | 工作区 | 差异要点 |
-|---|---|---|---|
-| `wewrite-visual/SKILL.md` | 09-05 | 10-12 | 工作区新增「封面必须走 make_cover.py」整段 + 「不要默认套深青」+ 去重闸门说明 |
-| `wewrite-visual/references/visual-guide.md` | 09-05 | 10-12 | 工作区新增「封面必须走生成器」整节 + 分类配色建议 |
-| `wewrite-publish/SKILL.md` | 09-05 | 09-09 | 模板层从「2 个注册」更新为「8 个注册」，新增 tutorial-dashboard 说明 |
-| `wewrite-publish/references/theme-selection.md` | 09-05 | 09-16 | 新增 promo 类型映射、muppet-editorial、tutorial-dashboard 段落 |
-| `wewrite-publish/scripts/apply_template.py` | 09-05 | 09-16 | 新增 muppet-editorial、tutorial-dashboard 两个模板实现 |
+同步后仓库与工作区 0 处不一致，模板 8 个、主题 11 套。
 
-### 仓库完全缺失的东西
+### 新增：同步流程与脚本
 
-**模板层（`apply_template.py` 的 TEMPLATES 注册表）**
+漂移的根因是没有同步步骤，所以同步做成了显式动作：
 
-```
-仓库：  kazk-editorial, bold-contrast, qa-bubble, timeline-log, knowledge-card, press        （6 个）
-工作区：kazk-editorial, muppet-editorial, bold-contrast, qa-bubble, timeline-log,
-        knowledge-card, press, tutorial-dashboard                                            （8 个）
-```
+- `tools/sync_skills.py` —— 双向同步 + 一致性检查
+  - `--to project` 仓库 → 内容项目
+  - `--to repo` 内容项目 → 仓库
+  - `--check` 只检查差异（退出码 0 = 一致）
+  - `--dry-run` 预演
+- `docs/sync-workflow.md` —— 流程说明、触发时机、各自独有的东西
 
-缺 `muppet-editorial`（福利/活动首选）和 `tutorial-dashboard`（教程首选）两个模板。
-**这两个是 9-16 之后加的，仓库里根本没有** —— 也就是说仓库当前状态连
-「福利文该用什么版式」都无法回答。
+### 仍需人工处理的两项
 
-**主题层（`themes/`）**
+**1. `style.yaml` 的 `cover_style` 是失效字段**
 
-```
-仓库缺：emerald-tutorial.yaml, muppet-editorial.yaml
-```
+现在写的是「简洁科技感，深青色调，扁平化设计」，正是用户想摆脱的那套。
+`style-template.md` 说它是「封面风格描述」，但全项目没有任何代码读它。
+改过的是 artcraft 那篇的封面实现，没改的是这个没人读的字段。
 
-`emerald-tutorial` 是 tutorial-dashboard 的默认配色，两者配套，缺一不可。
+→ 属于工作区状态（`.wewrite/style.yaml`），不进仓库。要么改成实际生效的规范，
+要么删掉换成 `cover_palette` 字段。**一个没人读的字段比没有字段更危险**，
+它会让 Agent 以为已经设过。
 
-**测试**
+**2. `playbook.md` 缺失，个人修改没被沉淀**
 
-`skills/wewrite-publish/tests/test_tutorial_dashboard.py` 只在工作区有，仓库没有。
-tutorial-dashboard 模板带插槽校验（缺配置/漏放/重复都会报错），这块有测试保护，
-仓库里没有测试 = 没有保护。
+`wewrite diagnose` 长期报 `playbook: not found → no learned style`。
+用户在 2026-10-20 同一场会话里纠正了三次（掰开揉碎 / 太玄幻 / 别加私活），
+全部只存在于对话上下文。
 
-**工作区独有（不属于本仓库，不要往仓库塞）**
-
-```
-skills/aihot/            AI 资讯查询，独立 skill，与 wewrite 流水线无关
-.wewrite/tools/          项目级工具（make_cover.py 等），属于工作区而非 skill 仓库
-.wewrite/config.yaml     微信凭证，只存本地
-```
-
-**注意**：`make_cover.py` 现在住在 `.wewrite/tools/`（工作区），
-但 skill 文档让 Agent 去用它。这是个**跨仓库的依赖**：skill 仓库里没有这个脚本，
-别人 clone 下来按 skill 文档操作会直接失败。要么把脚本挪进 `skills/wewrite-visual/scripts/`，
-要么在 skill 文档里说明它从哪来。
-
-### 建议的同步顺序
-
-1. 先把工作区 5 个更新的文件回灌到仓库（内容已经验证过能用）
-2. 补 `emerald-tutorial.yaml` + `muppet-editorial.yaml` 两个主题
-3. 补 `tests/test_tutorial_dashboard.py`
-4. 再做上面第一节、第二节的规则修订
-5. 决定 `make_cover.py` 的归属：进 skill 仓库，还是留在工作区
+→ 需要用户手动改一次稿子，再跑「学习我的修改」，规则才能落盘。
+`article-brief.md` 新增的 `must_avoid 会被逐条核对` 只能保证**单篇**不越界，
+跨会话的偏好要靠 playbook 沉淀。
 
 ---
 
@@ -212,20 +199,20 @@ skills/aihot/            AI 资讯查询，独立 skill，与 wewrite 流水线�
 在 `D:\sudy\myproject\wechat-writing-skills` 下实施：
 
 **写作端**
-- [ ] `article-brief.md` 增加 `content_type` 字段与 announcement 类的长度区间
-- [ ] `frameworks-quick.md` 增加「发布声明」框架
-- [ ] `wewrite-review/SKILL.md` 增加第六项判断「守界」
-- [ ] `editorial-quality.md` 把「无关段落」改成可判定表述
-- [ ] `wewrite-write/SKILL.md:106` 长度按体裁取值
+- [x] `article-brief.md` 增加 `content_type` 字段与 announcement 类的长度区间
+- [ ] `frameworks-quick.md` 增加「发布声明」框架（改用 `article-brief.md` 的 `content_type: announcement` 实现，帧本身可不动）
+- [x] `wewrite-review/SKILL.md` 增加第六项判断「守界」
+- [x] `editorial-quality.md` 把「无关段落」改成可判定表述
+- [x] `wewrite-write/SKILL.md:106` 长度按体裁取值
 
 **封面端**
-- [ ] `wewrite-visual/SKILL.md` 补「不要拿上一篇的脚本当模板」
-- [ ] `visual-guide.md` 补「先看历史封面再定配色」
-- [ ] `make_cover.py` 闸门加配色维度检测
-- [ ] `style.yaml` 的 `cover_style` 修正或删除
+- [x] `wewrite-visual/SKILL.md` 补「不要拿上一篇的脚本当模板」
+- [x] `visual-guide.md` 补「先看历史封面再定配色」
+- [x] `make_cover.py` 闸门加配色维度检测
+- [ ] `style.yaml` 的 `cover_style` 修正或删除（属工作区状态，不进仓库，需人工处理）
 
 **仓库同步**
-- [ ] 回灌 5 个工作区更新的文件
-- [ ] 补 2 个主题 yaml
-- [ ] 补 tutorial-dashboard 测试
-- [ ] 决定 `make_cover.py` 归属
+- [x] 回灌 5 个工作区更新的文件
+- [x] 补 2 个主题 yaml
+- [x] 补 tutorial-dashboard 测试
+- [x] 决定 `make_cover.py` 归属
