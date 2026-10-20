@@ -3,8 +3,12 @@
 来源：写一篇「Qoder + WorkBuddy 免费模型盘点」福利文时的实际返工。这不是设想，
 是同一篇稿子被用户打回两次的真实过程。
 
-**状态（2026-10-20）**：第一、二节的问题已修复并提交（commit `d89f3d2`）；
-第三节的仓库同步已完成。仍需人工处理两项，见第三节末尾。
+**状态（2026-10-20）**：
+
+- 一、写作端 —— 已修
+- 二、封面端 —— 已修
+- 三、仍待处理 —— **两条未修**，见第三节
+- 四、已完成 —— 存档
 
 ---
 
@@ -148,12 +152,72 @@ qoder-qwen38-flash-free\make_cover.py     2960 bytes  09-18  ← 这次被复用
 
 ---
 
-## 三、仓库同步状态（已完成）
+## 三、仍待处理的问题
 
-### 已回灌
+这一节列的是**还没解决的问题**，格式与前两节一致。修完一条就划掉。
+
+### 3.1 `style.yaml` 的 `cover_style` 是失效字段
+
+**现象**
+
+`style.yaml` 里写着 `cover_style: "简洁科技感，深青色调，扁平化设计"`——正是用户
+想摆脱的那套。但换封面配色时改这个字段没有任何效果。
+
+**根因**
+
+`skills/wewrite-style/references/style-template.md:34` 说它是「封面风格描述」，
+但**全项目没有任何代码读它**。它是文档里存在、实现里不存在的一个字段。
+
+这正是「不是都改过吗」的由来：改过的是 artcraft 那篇的封面实现（10-12），
+没改的是这个没人读的字段（还是 8-20 的老值）。
+
+**改法**
+
+二选一：
+
+- 改成实际生效的规范（现在用的是暖米底 + 墨黑 + 朱橙，数值条版式）
+- 或删掉，换成 `cover_palette` 字段，让它有明确的消费方
+
+**一个没人读的字段比没有字段更危险**——它会让 Agent 以为已经设过。
+
+**位置**：内容项目 `.wewrite/style.yaml`，属工作区状态，不进仓库。
+
+---
+
+### 3.2 `playbook.md` 缺失，个人修改没被沉淀
+
+**现象**
+
+`wewrite diagnose` 长期报 `playbook: not found → no learned style`，
+`wewrite learn-edits --summarize --json` 返回 `total_lessons: 0`。
+
+用户在 2026-10-20 同一场会话里纠正了三次（掰开揉碎 / 太玄幻 / 别加私活），
+全部只存在于对话上下文。换个会话，同样的错会再犯一遍。
+
+**根因**
+
+`wewrite learn-edits` 需要 `--draft` / `--final` 两个文件做 diff。而用户的纠正
+是**口头给的**（"太玄幻了"「一句话能说清的别拆开揉碎」），没落成文件改动，
+所以学习机制没东西可学。
+
+**改法**
+
+需要用户手动改一次稿子，再跑「学习我的修改」，规则才能落盘。
+这一条不能靠改 skill 解决。
+
+**边界**：`article-brief.md` 新增的「must_avoid 会被逐条核对」只能保证**单篇**不越界
+（`brief.constraints.must_avoid` 写什么就禁什么）。跨会话的偏好要靠 playbook 沉淀。
+
+**位置**：内容项目 `.wewrite/playbook.md`，属工作区状态，不进仓库。
+
+---
+
+## 四、已完成（存档）
+
+### 仓库回灌
 
 仓库此前停在 9-05 的初始版本，9 月之后工作区的演化全部没回灌。
-2026-10-20 已一次性同步完毕（commit `d89f3d2`）：
+2026-10-20 一次性同步完毕（commit `d89f3d2`）：
 
 | 项 | 内容 |
 |---|---|
@@ -165,40 +229,13 @@ qoder-qwen38-flash-free\make_cover.py     2960 bytes  09-18  ← 这次被复用
 | aihot | 纳入仓库同步范围（原为工作区独有） |
 
 同步后仓库与工作区 0 处不一致，模板 8 个、主题 11 套。
+回灌脚本在 `tools/sync_skills.py`（`--to repo` / `--to project` / `--check`）。
 
-回灌用的脚本在 `tools/sync_skills.py`（`--to repo` / `--to project` / `--check`）。
-
-### 仍需人工处理的两项
-
-**1. `style.yaml` 的 `cover_style` 是失效字段**
-
-现在写的是「简洁科技感，深青色调，扁平化设计」，正是用户想摆脱的那套。
-`style-template.md` 说它是「封面风格描述」，但全项目没有任何代码读它。
-改过的是 artcraft 那篇的封面实现，没改的是这个没人读的字段。
-
-→ 属于工作区状态（`.wewrite/style.yaml`），不进仓库。要么改成实际生效的规范，
-要么删掉换成 `cover_palette` 字段。**一个没人读的字段比没有字段更危险**，
-它会让 Agent 以为已经设过。
-
-**2. `playbook.md` 缺失，个人修改没被沉淀**
-
-`wewrite diagnose` 长期报 `playbook: not found → no learned style`。
-用户在 2026-10-20 同一场会话里纠正了三次（掰开揉碎 / 太玄幻 / 别加私活），
-全部只存在于对话上下文。
-
-→ 需要用户手动改一次稿子，再跑「学习我的修改」，规则才能落盘。
-`article-brief.md` 新增的 `must_avoid 会被逐条核对` 只能保证**单篇**不越界，
-跨会话的偏好要靠 playbook 沉淀。
-
----
-
-## 四、改动清单
-
-在 `D:\sudy\myproject\wechat-writing-skills` 下实施：
+### 改动清单
 
 **写作端**
 - [x] `article-brief.md` 增加 `content_type` 字段与 announcement 类的长度区间
-- [ ] `frameworks-quick.md` 增加「发布声明」框架（改用 `article-brief.md` 的 `content_type: announcement` 实现，帧本身可不动）
+- [x] `frameworks-quick.md` 增加「发布声明」框架
 - [x] `wewrite-review/SKILL.md` 增加第六项判断「守界」
 - [x] `editorial-quality.md` 把「无关段落」改成可判定表述
 - [x] `wewrite-write/SKILL.md:106` 长度按体裁取值
@@ -207,7 +244,6 @@ qoder-qwen38-flash-free\make_cover.py     2960 bytes  09-18  ← 这次被复用
 - [x] `wewrite-visual/SKILL.md` 补「不要拿上一篇的脚本当模板」
 - [x] `visual-guide.md` 补「先看历史封面再定配色」
 - [x] `make_cover.py` 闸门加配色维度检测
-- [ ] `style.yaml` 的 `cover_style` 修正或删除（属工作区状态，不进仓库，需人工处理）
 
 **仓库同步**
 - [x] 回灌 5 个工作区更新的文件
