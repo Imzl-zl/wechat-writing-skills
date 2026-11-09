@@ -25,7 +25,7 @@
 
 排版的核心设计是**两个正交维度**，先定模板、再配主题：
 
-- **模板 = 版式结构**：8 个带确定性结构变换的模板（由 `skills/wewrite-publish/scripts/apply_template.py`
+- **模板 = 版式结构**：9 个带确定性结构变换的模板（由 `skills/wewrite-publish/scripts/apply_template.py`
   在渲染前把 markdown 重写成版式）+ 2 个纯 CSS 骨架：
   | 模板 | 结构特征 | 适合 |
   |---|---|---|
@@ -37,11 +37,12 @@
   | 知识点卡 `knowledge-card` | 编号知识卡 | 干货科普/教程 |
   | 报刊墨渍 `press` | 衬线居中标题、双细线、一二三编号 | 深度分析 |
   | 教程面板 `tutorial-dashboard` | Hero 信息卡、路线图、问题卡、流程条、行动区 | 教程/工具实操 |
-- **主题 = 配色**：`themes/` 内置 11 套专属配色（含各模板原生配色），`--theme` 一键换色，
+  | 学长橙蓝风 `chengzi-benefit` | 渐变标题条（天蓝→珊瑚橙）+ 圆点编号小节头 | 福利/安利向 |
+- **主题 = 配色**：`themes/` 内置 12 套专属配色（含各模板原生配色），`--theme` 一键换色，
   结构不变；微信兼容（全内联样式，粘贴不乱）。
 - **自动判型**：AI 读成稿识别 8 种内容类型（教程/体验记/分析/清单/福利/问答/日志/科普），
   按决策表自动选模板和配色，只出一张最终预览。
-- **可视化矩阵**：`themes/showcase.html`——8 模板 × 15 配色，点色卡即换，直接在浏览器打开。
+- **可视化矩阵**：`themes/showcase.html`——11 模板 × 18 配色，点色卡即换，直接在浏览器打开。
 
 想从别人的公众号文章偷样式：`wewrite learn-theme --name <名字> <URL>`（自动学配色骨架，
 装饰性排版需人工修 yaml + 补结构变换）。
@@ -49,8 +50,9 @@
 ## 已知问题
 
 见 [`docs/known-issues-2026-10-20.md`](docs/known-issues-2026-10-20.md)——记录了写作端
-「内容扩展 / 掰开揉碎」与封面端「配色重复」两类问题的实测根因、修复情况，以及仍需人工
-处理的两项。
+「内容扩展 / 掰开揉碎」与封面端「配色重复」两类问题的实测根因、修复情况，以及仍待处理的
+三项（`cover_style` 是没人读的失效字段、`playbook.md` 缺失导致口头纠正学不到、`content_eval`
+字数口径与闸门不一致）。
 
 ## 安装
 
@@ -68,6 +70,14 @@ cp wechat-writing-skills/themes/*.yaml <你的项目>/.wewrite/themes/
 
 # 4. 首次使用：对 Agent 说"设置公众号风格"
 ```
+
+装完先验一次 `wewrite --version`。如果提示命令不存在（uv 装好了但 shim 没落到 PATH 上），
+跑 `uv tool install --force wewrite` 重建，或直接用
+`$(uv tool dir)/wewrite/Scripts/wewrite.exe`。
+
+本仓库是源码仓，内容项目里的改动要回灌才有意义：`python tools/sync_skills.py --check`
+看差异，`--to repo` 从项目回灌仓库，`--to project` 从仓库铺到项目（会覆盖项目里的新版，
+除非确认仓库更新，否则别用）。
 
 草稿箱发布需要微信公众号 appid/secret（只存本地 `config.yaml`，不要提交到任何仓库）。
 不配凭证也能用：本地预览 + 一键复制页面，手动粘贴到公众号编辑器。
