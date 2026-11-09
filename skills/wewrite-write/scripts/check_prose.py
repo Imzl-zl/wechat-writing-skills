@@ -200,6 +200,26 @@ METAPHOR_FIELDS = {
 }
 
 
+# 长度上限不在脚本里定。文章该多长由材料决定，只有写任务书的人看得见材料，
+# 所以上限写在 brief.length_cap，脚本只执行这个声明值。脚本自己编一个数，
+# 会误杀材料足够的长文，也拦不住材料不足的凑字稿——上限管的是失控，不是质量。
+# 同一精确数字在正文里允许出现的次数。超过就是在反复讲同一个事实。
+NUMBER_REPEAT_LIMIT = 3
+
+# 标题命中这些词的那一节按结论节处理：不许再引用正文出现过的精确数字。
+CONCLUSION_TITLES = ("结论", "总结", "收尾", "最后", "结语")
+
+LAYOUT_LINE_PATTERNS = (
+    re.compile(r"(?m)^[ \t]*\|.*$"),
+    re.compile(r"(?m)^[ \t]*!\[.*$"),
+    re.compile(r"(?m)^[ \t]*#{1,6}[ \t]+.*$"),
+)
+
+NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_.%])(\d[\d,]*(?:\.\d+)?)(?![A-Za-z0-9])")
+YEAR_RE = re.compile(r"(?:19|20)\d{2}")
+HEADING_RE = re.compile(r"(?m)^(#{1,6})[ \t]+(.*)$")
+
+
 @dataclass
 class Paragraph:
     position: int
@@ -239,6 +259,58 @@ def mask_non_prose(text: str) -> str:
     for pattern in patterns:
         masked = pattern.sub(mask, masked)
     return masked
+
+
+def mask_layout(text: str) -> str:
+    """屏蔽表格、图片行和标题，保留字符位置与换行。
+
+    表格里的数字是数据，不是叙述；图片说明和标题也不是正文。把它们算进字数，
+    会让「正文够长」变成假象——这是长度闸门此前失真的直接原因。
+    """
+
+    def mask(match: re.Match[str]) -> str:
+        return "".join("\n" if char == "\n" else " " for char in match.group())
+
+    masked = text
+    for pattern in LAYOUT_LINE_PATTERNS:
+        masked = pattern.sub(mask, masked)
+    return masked
+
+
+def precise_numbers(text: str):
+    """正文里的精确数字：带小数点，或四位以上数字。年份不算。
+
+    三位整数（99、199、500）多是标签或档位，反复出现通常指不同侧面，不算复述。
+    """
+
+    found = []
+    for match in NUMBER_RE.finditer(text):
+        token = match.group(1).replace(",", "")
+        if "." not in token and len(token) < 4:
+            continue
+        if YEAR_RE.fullmatch(token):
+            continue
+        found.append((match.start(), token))
+    return found
+
+
+def conclusion_start(text: str) -> int | None:
+    """最后一个命中结论类标题的小节起点。"""
+
+    for match in reversed(list(HEADING_RE.finditer(text))):
+        if any(word in match.group(2) for word in CONCLUSION_TITLES):
+            return match.start()
+    return None
+
+
+def brief_scalar(text: str, key: str) -> str | None:
+    """从 brief.yaml 读一个标量。只解析需要的字段，不引入 yaml 依赖。"""
+
+    match = re.search(rf"(?m)^[ \t]*{re.escape(key)}[ \t]*:[ \t]*(.+?)[ \t]*$", text)
+    if not match:
+        return None
+    value = match.group(1).split(" #")[0].strip().strip("\"'")
+    return value or None
 
 
 def non_overlapping_terms(text: str, terms: tuple[str, ...]):
@@ -327,7 +399,7 @@ def prose_paragraphs(text: str) -> list[Paragraph]:
         position = text.find(block, cursor)
         cursor = max(position + len(block), cursor)
         clean = re.sub(r"[>*_`]", "", block).strip()
-        if not clean or clean.startswith(("#", "http", "![", "```")):
+        if not clean or clean.startswith(("#", "http", "![", "```", "|")):
             continue
         if re.match(r"^(?:[-+*]|\d+[.、])\s", clean):
             continue
@@ -386,8 +458,12 @@ def read_text(path: str) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="检查中文成稿的硬禁令与模型化形状")
+    parser = argparse.ArgumentParser(description="检查中文成稿的硬禁令、长度与复述")
     parser.add_argument("path", help="Markdown 或文本文件路径。使用 - 从标准输入读取")
+    parser.add_argument(
+        "--brief",
+        help="brief.yaml 路径。提供后按 content_type 检查正文长度上限，并核对结论节是否复述",
+    )
     args = parser.parse_args()
 
     try:
@@ -396,7 +472,24 @@ def main() -> int:
         print(f"无法读取稿件。{error}", file=sys.stderr)
         return 2
 
-    prose = mask_non_prose(text)
+    cap = None
+    cap_note = None
+    if args.brief:
+        try:
+            brief_text = Path(args.brief).read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as error:
+            print(f"无法读取任务书。{error}", file=sys.stderr)
+            return 2
+        declared = brief_scalar(brief_text, "length_cap")
+        if declared and declared.isdigit():
+            cap = int(declared)
+        else:
+            cap_note = (
+                "任务书没有写 length_cap，这次没有检查长度上限。"
+                "长度由材料决定，按这篇实际要讲的东西写一个上限再跑。"
+            )
+
+    prose = mask_non_prose(mask_layout(text))
     total_han = han_count(prose)
     if total_han == 0:
         print("没有检测到汉字。", file=sys.stderr)
@@ -404,6 +497,15 @@ def main() -> int:
 
     failures = []
     warnings = []
+
+    if cap_note:
+        warnings.append(cap_note)
+
+    if cap is not None and total_han > cap:
+        failures.append(
+            f"正文 {total_han} 汉字，超过任务书声明的上限 {cap}。"
+            "先删复述段落和重复解释，不要删事实、数字和动作。"
+        )
 
     quote_colons = []
     for symbol, label in FORBIDDEN_PUNCTUATION.items():
@@ -609,14 +711,58 @@ def main() -> int:
             f"例词有 {samples}。"
         )
 
-    print(f"汉字数 {total_han}")
+    numbers = precise_numbers(prose)
+    counts = collections.Counter(token for _, token in numbers)
+    for token, count in counts.most_common():
+        if count <= NUMBER_REPEAT_LIMIT:
+            continue
+        lines = "、".join(
+            str(line_number(text, position))
+            for position, value in numbers
+            if value == token
+        )
+        failures.append(
+            f"精确数字 {token} 在正文出现 {count} 次（第 {lines} 行）。"
+            f"同一个事实最多讲 {NUMBER_REPEAT_LIMIT} 次，其余改成指代或删掉。"
+        )
+
+    boundary = conclusion_start(text)
+    if boundary is not None:
+        body = [(position, token) for position, token in numbers if position < boundary]
+        body_tokens = {token for _, token in body}
+        recap: dict[int, list[str]] = {}
+        for position, token in numbers:
+            if position < boundary or token not in body_tokens:
+                continue
+            line = line_number(text, position)
+            tokens = recap.setdefault(line, [])
+            if token not in tokens:
+                tokens.append(token)
+        for line, tokens in sorted(recap.items()):
+            firsts = sorted(
+                {
+                    line_number(text, next(p for p, t in body if t == token))
+                    for token in tokens
+                }
+            )
+            failures.append(
+                f"结论复述：第 {line} 行又讲了一遍第 {'、'.join(map(str, firsts))} 行"
+                f"已有的事实（{'、'.join(tokens)}）。结论只写新判断和动作。"
+            )
+
+    print(f"正文汉字 {total_han}（不含表格、图片说明与标题）")
+    if cap is not None:
+        margin = cap - total_han
+        state = f"超出 {-margin}" if margin < 0 else f"余量 {margin}"
+        print(f"上限 {cap} 汉字（任务书声明），{state}")
     print(
         f"翻案句 {len(pivots)}，翻案腔变形 {len(semantic_pivots)}，"
         f"同构排比 {len(anaphoras)}，名词化 {len(nominalizations)}，"
         f"黑话 {len(jargon_matches)}，硬停词 {len(stop_matches)}，"
         f"模型路标 {len(road_signs)}，需辨语境词 {len(context_jargon_matches)}，"
         f"抒情词 {len(lyric_matches)}，洞察路标 {len(marker_matches)}，"
-        f"长前置成分 {len(left_branches)}，重定语句 {len(dense_de)}"
+        f"长前置成分 {len(left_branches)}，重定语句 {len(dense_de)}，"
+        f"精确数字 {len(numbers)} 个"
     )
 
     if failures:

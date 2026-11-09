@@ -27,7 +27,7 @@
 
 - **模板（结构）**= apply_template.py 的注册名，决定标题形态、分隔线、图片框：
   `kazk-editorial` / `bold-contrast` / `qa-bubble` / `timeline-log` / `knowledge-card` / `press` /
-  `tutorial-dashboard` / `muppet-editorial`；无结构层的类型走纯 CSS 骨架（通用极简 / 卡片标题）。
+  `tutorial-dashboard` / `muppet-editorial` / `chengzi-benefit`；无结构层的类型走纯 CSS 骨架（通用极简 / 卡片标题）。
 
   `tutorial-dashboard` 可选用 `tutorial_dashboard` YAML frontmatter 补全 Hero、路线图、问题卡、标签云、流程条、
   连接参数卡、提醒清单和收尾行动区；组件内容放在 `blocks`，正文用
@@ -42,7 +42,7 @@
 | tutorial（教程/工具实操） | `tutorial-dashboard` | `emerald-tutorial` 翠绿教程 | `knowledge-card`、`github`（代码极多、追求最素时） |
 | analysis（深度分析/行业） | `press` | `press` 墨黑朱砂 | newspaper、impeccable（纯 CSS） |
 | listicle（清单/资源汇总） | 通用极简（无结构层） | `sspai` 少数派红 | `muppet-editorial`、`knowledge-card` |
-| promo（福利/活动） | `muppet-editorial` | `muppet-editorial` 暖灰炭橙 | `token-rhythm-benefit`、卡片标题 + `red-pastel` |
+| promo（福利/活动） | `muppet-editorial` | `muppet-editorial` 暖灰炭橙 | `chengzi-benefit`、`token-rhythm-benefit`、卡片标题 + `red-pastel` |
 | faq（问答/测评） | `qa-bubble` | `qa-bubble` 微信绿 | `knowledge-card` |
 | log（过程日志/踩坑记录） | `timeline-log` | `timeline-log` 靛蓝 | `kazk-editorial` |
 | knowledge（干货科普） | `knowledge-card` | `knowledge-card` 知识蓝 | 通用极简 + sspai |
@@ -70,7 +70,7 @@
 - **模板（template）**：主题皮肤 + 版式结构。结构（幽灵数字小节号、三色圆点线、图片
   裁切框、编号标题）由 `{skill_dir}/scripts/apply_template.py` 在渲染前对 markdown 做
   确定性变换实现，渲染器透传内联 HTML。**选了带模板层的主题必须跑脚本**，跳过脚本 =
-  又变回"换色主题"。目前注册的模板层（8 个）：
+  又变回"换色主题"。目前注册的模板层（9 个）：
   - `kazk-editorial`：h2→幽灵数字小节（自动 01/02 编号），`---`→三色圆点线，
     独立成段的图→四角裁切框 + FIG 编号 + 图说
   - `bold-contrast`：h2→等宽琥珀色「01 /」编号前缀；金句卡/短黑线靠 CSS 自动
@@ -101,6 +101,16 @@
   - `tutorial-dashboard`：Hero 教程信息卡 + PART 横向路线图（等高卡片、可内部横滑）+ h2 / 展平来源的 PART 章节号 +
     h3/h4 / 展平来源的 STEP 标记 + 问题卡、标签云、流程条、连接参数卡、提醒清单、提示卡、截图框、
     按内容分配列宽的表格和行动区；默认皮肤 `emerald-tutorial`，可用 `--theme` 任意换色
+   - `chengzi-benefit`：渐变标题条（天蓝→珊瑚橙 135°）+ 圆点编号小节头（01/02…，蓝底白字圆点 +
+     天蓝大标题 + 灰色英文小标签）+ 独立成段的加粗短句 → 珊瑚橙圆点胶囊引导条。学自
+     「考研英语外刊阅读」的福利/安利向排版；默认皮肤 `chengzi-orange`，可用 `--theme` 任意换色。
+     可选 frontmatter（不写则不出渐变标题条，其余结构照常）：
+
+     ```yaml
+     chengzi:
+       kicker: "LEAD / 导语"             # 渐变条上的小标签
+       headline: "为什么这个号值得你关注"  # 渐变条上的大标题（必填才出条）
+     ```
 
   可选 frontmatter（不写也能用）：
 

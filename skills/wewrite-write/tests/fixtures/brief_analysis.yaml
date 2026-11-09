@@ -1,0 +1,6 @@
+version: 1
+content_type: "analysis"
+constraints:
+  length_cap: 2500
+  must_include: []
+  must_avoid: []

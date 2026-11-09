@@ -1,0 +1,200 @@
+name: "chengzi-orange"
+description: "学长橙蓝风：天蓝强调 + 珊瑚橙重点 + 圆点徽章小节头（带模板层）"
+aigc_footer: false
+colors:
+  primary: "#89ceea"
+  secondary: "#f86b4a"
+  text: "#3e3e3e"
+  text_light: "#576b95"
+  text_heading: "#2a2a2a"
+  text_caption: "#9aa5b1"
+  background: "#ffffff"
+  background_light: "#f2f9fd"
+  code_bg: "#f2f9fd"
+  code_color: "#0187cf"
+  quote_border: "#f86b4a"
+  quote_bg: "#fff4f0"
+  highlight_bg: "#e8f6fd"
+  highlight_border: "#89ceea"
+  summary_bg: "#f2f9fd"
+  border_radius: "6px"
+  darkmode:
+    background: "#101b24"
+    text: "#d5dde3"
+    text_light: "#9fb3c0"
+    text_heading: "#f2f9fd"
+    primary: "#5fb8dc"
+    secondary: "#ff8a6b"
+    code_bg: "#17242f"
+    code_color: "#8fd4f0"
+    quote_bg: "#17242f"
+    quote_border: "#ff8a6b"
+    highlight_bg: "#1b2b37"
+base_css: |
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.9;
+    color: #3e3e3e;
+    background: #ffffff;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 18px;
+    word-wrap: break-word;
+  }
+
+  h1 {
+    font-size: 23px;
+    font-weight: 800;
+    color: #2a2a2a;
+    margin: 0 0 14px;
+    line-height: 1.35;
+  }
+
+  h2 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #2a2a2a;
+    margin: 36px 0 14px;
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin: 22px 0 10px;
+    line-height: 1.6;
+  }
+
+  h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin: 20px 0 10px;
+    line-height: 1.5;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #3e3e3e;
+    margin: 0 0 16px;
+    text-align: justify;
+  }
+
+  strong {
+    font-weight: 700;
+    color: #0187cf;
+  }
+
+  em {
+    font-style: italic;
+    color: #576b95;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    background: #f2f9fd;
+    color: #0187cf;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #f2f9fd;
+    color: #1f2937;
+    padding: 15px 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 16px 0;
+    line-height: 1.7;
+  }
+
+  pre code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    background: none;
+    color: #1f2937;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  blockquote {
+    border-left: 3px solid #f86b4a;
+    background: #fff4f0;
+    margin: 18px 0;
+    padding: 14px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #3e3e3e;
+  }
+
+  blockquote p {
+    margin: 6px 0;
+    color: #3e3e3e;
+  }
+
+  ul, ol {
+    padding-left: 24px;
+    margin: 0 0 16px;
+  }
+
+  li {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #3e3e3e;
+    margin: 8px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 14px;
+  }
+
+  thead {
+    background: #f2f9fd;
+  }
+
+  th {
+    color: #2a2a2a;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid #dceaf3;
+  }
+
+  td {
+    padding: 10px 12px;
+    border: 1px solid #dceaf3;
+    color: #3e3e3e;
+  }
+
+  tr {
+    background: #ffffff;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 22px auto;
+    border-radius: 6px;
+  }
+
+  a {
+    color: #576b95;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid #89ceea;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background: #dceaf3;
+    margin: 28px 0;
+  }

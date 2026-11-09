@@ -25,6 +25,8 @@ labels.json（可选，英文小标签由人/AI 判断，脚本不编）: {"小�
   tutorial-dashboard Hero 教程仪表盘 + 横向路线图 + PART/STEP 标记 + 提示卡
   muppet-editorial   刊头细线 + 炭黑信息条 + PART 编号小节 + pill 小标题 + Step 徽章
                      + 虚线图框 + 卡片表格（适合福利/简报/清单）
+  chengzi-benefit    渐变标题条 + 圆点徽章小节头（01/02…）+ 珊瑚橙重点下划线
+                     + 胶囊引导条 + 引用提示卡（适合福利/活动/清单汇总）
 """
 
 import argparse
@@ -222,6 +224,113 @@ def transform_bold(md, labels, pal):
         else:
             out.append(line)
     return "\n".join(out), section_no, 0
+
+
+# ---------------------------------------------------------------- chengzi-benefit
+
+def gradient_lead(pal, kicker, headline):
+    """渐变标题条：小标签 + 大标题，天蓝→珊瑚橙对角渐变。"""
+    return (
+        '<section style="border-radius:12px;padding:18px 20px 16px;margin:0 0 18px;'
+        'background-image:linear-gradient(135deg,%(primary)s 0%%,%(secondary)s 100%%);'
+        'box-sizing:border-box;">' % pal
+        + '<p style="margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:2px;'
+        'color:rgba(255,255,255,.82);">' + (kicker or "LEAD / 导语") + "</p>"
+        + '<p style="margin:0;font-size:21px;font-weight:900;line-height:1.35;'
+        'color:#ffffff;">' + headline + "</p></section>"
+    )
+
+
+def pill_lead(text, pal):
+    """胶囊引导条：圆点 + 强调色文字，用于「为自己而坚持 / 超强安利！」这类短引导。
+
+    圆点用 inline-block + vertical-align 对齐，不依赖 flex——微信编辑器粘贴时会
+    丢掉 flex 容器布局。
+    """
+    return (
+        '<section style="margin:0 0 14px;line-height:1.6;">'
+        '<span style="display:inline-block;width:8px;height:8px;border-radius:50%%;'
+        'background:%(secondary)s;vertical-align:2px;margin-right:8px;'
+        'line-height:0;font-size:0;">&nbsp;</span>' % pal
+        + '<span style="font-size:15px;font-weight:700;color:%(primary)s;">' % pal
+        + text + "</span></section>"
+    )
+
+
+def badge_section(num, title, label, pal):
+    """圆点徽章小节头：蓝色圆点（编号）+ 天蓝大标题 + 灰色英文小标签。
+
+    圆点与文字用 inline-block + vertical-align:top 并排，不依赖 flex；文字包一层
+    inline-block 限制宽度，标签才能在自己的行上换行。
+    """
+    return (
+        '<section style="margin:34px 0 14px;">'
+        '<span style="display:inline-block;width:26px;height:26px;border-radius:50%%;'
+        'background:%(primary)s;color:#ffffff;font-size:13px;font-weight:800;'
+        'line-height:26px;text-align:center;vertical-align:top;margin-right:10px;">' % pal
+        + num + "</span>"
+        + '<span style="display:inline-block;vertical-align:top;max-width:calc(100% - 40px);">'
+        + '<span style="display:block;font-size:17px;font-weight:800;color:%(heading)s;'
+        'line-height:1.5;">' % pal + title + "</span>"
+        + '<span style="display:block;margin-top:4px;font-size:10px;font-weight:700;'
+        'letter-spacing:1.6px;color:%(caption)s;">' % pal + label + "</span>"
+        + "</span></section>"
+    )
+
+
+def coral_underline(text, pal):
+    """珊瑚橙重点下划线：用于一句话总结、金句。"""
+    return (
+        '<span style="font-weight:800;color:%(heading)s;border-bottom:3px solid %(secondary)s;'
+        'padding-bottom:1px;">' % pal + text + "</span>"
+    )
+
+
+def transform_chengzi(md, labels, pal):
+    """h2→圆点徽章小节头；独立成段的 **短句**→胶囊引导条；引用→提示卡。
+
+    源文章特征（考研英语外刊阅读 / 大橙子）：天蓝 #89CEEA + 珊瑚橙 #F86B4A 双色，
+    渐变标题条、圆点字徽章（不负青春）、珊瑚橙下划线重点。
+    """
+    lines = md.split("\n")
+    out, section_no = [], 0
+    kicker = None
+    headline = None
+    for i, line, in_fm in _frontmatter_iter(lines):
+        stripped = line.strip()
+        if in_fm:
+            # 从 frontmatter 取 chengzi.kicker / chengzi.headline
+            m_k = re.match(r"^\s*kicker:\s*(.+?)\s*$", line)
+            m_h = re.match(r"^\s*headline:\s*(.+?)\s*$", line)
+            if m_k:
+                kicker = m_k.group(1).strip().strip("\"'")
+            elif m_h:
+                headline = m_h.group(1).strip().strip("\"'")
+            out.append(line)
+            continue
+        h2 = re.match(r"^##\s+(?!#)(.+?)\s*#*\s*$", line)
+        # 独立成段的加粗短句 → 胶囊引导条
+        pill = re.match(r"^\*\*(.{1,20}?)\*\*[!！。.~]?$", stripped)
+        if h2:
+            section_no += 1
+            title = h2.group(1).strip()
+            label = labels.get(title, "SECTION %02d" % section_no)
+            out.append(badge_section("%02d" % section_no, title, label, pal))
+        elif pill:
+            out.append(pill_lead(pill.group(1).strip(), pal))
+        else:
+            out.append(line)
+    # 有 headline 时，在 frontmatter 之后插入渐变标题条（不能插到 frontmatter 前，否则失效）
+    if headline:
+        insert_at = 0
+        if out and out[0].strip() == "---":
+            for k in range(1, len(out)):
+                if out[k].strip() == "---":
+                    insert_at = k + 1
+                    break
+        out.insert(insert_at, gradient_lead(pal, kicker, headline))
+    return "\n".join(out), section_no, 0
+
 
 
 CN_NUM = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十",
@@ -2093,6 +2202,7 @@ TEMPLATES = {
     "knowledge-card": (transform_knowledge, "knowledge-card"),
     "press": (transform_press, "press"),
     "tutorial-dashboard": (transform_tutorial_dashboard, "emerald-tutorial"),
+    "chengzi-benefit": (transform_chengzi, "chengzi-orange"),
 }
 
 
