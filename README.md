@@ -96,8 +96,11 @@ style / config / history / runs / 主题全在这个目录里，仓库里没有�
 wewrite diagnose
 ```
 
-验收：`Python Packages`、`Config File` 不报 FAIL。此时缺 `style.yaml` 属正常，第 7 步才生成。
-Windows 上 `Config Permissions` 的 `chmod 600` 警告可忽略。
+验收：`Python Packages` 不报 FAIL，退出码 0。全新机器上会看到这些 **WARN，全部正常**，
+不要停下来"修"：
+`Config File`（还没 config.yaml）、`Wechat Credentials`、`Image Api Key`、`Style File`
+（第 7 步才生成）、`Playbook`、`History Articles`。**只有 FAIL 才需要处理**。
+Windows 上 `Config Permissions` 的 `chmod 600` 警告同样可忽略。
 
 ### 6. 跑通排版（模板层是否真生效的判据）
 
