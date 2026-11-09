@@ -20,6 +20,7 @@
 | `wewrite-rewrite` | 一稿多发：小红书/抖音改写 | "改写成小红书版" |
 | `wewrite-stats` | 阅读数据回填、选题建议 | "看看文章数据" |
 | `humanizer-zh` | 纯去 AI 味（任何稿子过一遍） | "去一下 AI 味" |
+| `aihot` | 中文 AI 资讯实时查询（aihot.news，匿名只读） | "今天 AI 圈有什么" |
 
 ## 安装：把这一节整段发给你的 AI
 
