@@ -53,6 +53,9 @@
 uv tool install wewrite      # 本仓库在 4.2.1 上验证
 ```
 
+版本低于 4.2.1 就升级；装到的版本更高、但命令参数对不上（报 `unrecognized arguments` 之类），
+用 `uv tool install wewrite==4.2.1` 回到验证过的版本，别改 skill 去迁就 CLI。
+
 验收：`wewrite --version` 打印出版本号。失败按顺序处理：
 
 1. 提示命令不存在 → `uv tool dir --bin` 返回的目录必须在 PATH 里，不在就告诉用户加。
@@ -67,6 +70,7 @@ uv tool install wewrite      # 本仓库在 4.2.1 上验证
 
 ```bash
 git clone https://github.com/Imzl-zl/wechat-writing-skills.git   # 本机还没有仓库时才需要
+mkdir -p <项目>/<skills目录>
 cp -r wechat-writing-skills/skills/* <项目>/<skills目录>/
 ```
 
