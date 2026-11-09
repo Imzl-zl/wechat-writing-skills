@@ -21,6 +21,127 @@
 | `wewrite-stats` | 阅读数据回填、选题建议 | "看看文章数据" |
 | `humanizer-zh` | 纯去 AI 味（任何稿子过一遍） | "去一下 AI 味" |
 
+## 安装：把这一节整段发给你的 AI
+
+人类不用逐条执行。把本节从「你的任务」到「交付清单」整段复制给 Agent，它会自己装完，
+中途只问你两三个必须由人决定的问题。
+
+---
+
+**你的任务**：在这台机器上把本仓库装成一个能写公众号文章的工作区。逐条执行，每条都带验收
+命令；验收不通过就停下报错，不要跳过，也不要先写文章回头再补装。
+
+**执行约束**
+
+- 只有三件事需要用户决定：写作项目目录、你的 skills 目录约定（`.claude/skills` /
+  `.agents/skills` / `.pi/skills`）、现在要不要配微信凭证。其余自己判断，不要反复确认。
+- 命令按当前系统改写。Windows 上 `cp -r` → `Copy-Item -Recurse`，`mkdir -p` →
+  `New-Item -ItemType Directory -Force`，`export X=Y` → `$env:X='Y'`。
+- Windows 上所有 `wewrite` 命令都加前缀 `PYTHONIOENCODING=utf-8`，否则中文输出会因 GBK 编码报错。
+- 每步把验收输出贴给用户，不要只说"装好了"。
+
+### 1. 环境盘点
+
+打印：操作系统、shell、写作项目目录、`uv --version`、`python --version`。
+
+验收：五项都有值。`uv` 缺失就让用户装（<https://docs.astral.sh/uv/> 或
+`winget install astral-sh.uv`），**不要**用 pip 装 wewrite。
+
+### 2. 装 CLI（唯一不在仓库里的依赖）
+
+```bash
+uv tool install wewrite      # 本仓库在 4.2.1 上验证
+```
+
+验收：`wewrite --version` 打印出版本号。失败按顺序处理：
+
+1. 提示命令不存在 → `uv tool dir --bin` 返回的目录必须在 PATH 里，不在就告诉用户加。
+2. 目录在 PATH 里但仍找不到 → `uv tool install --force wewrite` 重建启动器（shim）。
+3. 还不行 → 用 `uv tool dir --bin` 拼出 `wewrite.exe` 全路径，后续命令都用全路径。
+4. **这台机器此前给 wewrite 打过补丁时**（`uv tool dir` 下的
+   `wewrite/Lib/site-packages/wewrite/` 里存在 `*.orig`）别用 `--force`——它会重建 venv、
+   抹掉补丁。改成把 `wewrite/Scripts/wewrite.exe` 复制进 `uv tool dir --bin` 指的目录，
+   入口就回来了，包不动。
+
+### 3. 拷 skills
+
+```bash
+git clone https://github.com/Imzl-zl/wechat-writing-skills.git   # 本机还没有仓库时才需要
+cp -r wechat-writing-skills/skills/* <项目>/<skills目录>/
+```
+
+验收：目标目录下 **12 个子目录**，且 `<项目>/<skills目录>/wewrite/SKILL.md` 存在。
+
+### 4. 建状态目录 + 主题
+
+```bash
+mkdir -p <项目>/.wewrite/themes
+cp wechat-writing-skills/themes/*.yaml <项目>/.wewrite/themes/
+```
+
+再把 `WEWRITE_HOME` 持久化指向 `<项目>/.wewrite`（Windows：
+`[Environment]::SetEnvironmentVariable('WEWRITE_HOME','<项目>/.wewrite','User')`；
+macOS/Linux 写进 shell rc 文件）。
+
+验收：**新开一个 shell** 跑 `wewrite home`，输出必须等于 `<项目>/.wewrite`。
+style / config / history / runs / 主题全在这个目录里，仓库里没有也不该有。
+
+### 5. 自检
+
+```bash
+wewrite diagnose
+```
+
+验收：`Python Packages`、`Config File` 不报 FAIL。此时缺 `style.yaml` 属正常，第 7 步才生成。
+Windows 上 `Config Permissions` 的 `chmod 600` 警告可忽略。
+
+### 6. 跑通排版（模板层是否真生效的判据）
+
+```bash
+python <项目>/<skills目录>/wewrite-publish/scripts/apply_template.py <临时>.md --template kazk-editorial -o <临时>-deco.md
+wewrite preview <临时>-deco.md --theme kazk-editorial --no-open -o <项目>/_setup-check.html
+```
+
+验收：`_setup-check.html` 存在、大于 2KB、内容里搜得到 `style="` 内联样式。
+**只跑 `preview` 不跑 `apply_template.py` 不算通过**——那样出来的是纯换色主题，结构没生效。
+验收后删掉临时文件和 `_setup-check.html`。
+
+### 7. 首次风格设置（必须和用户对话）
+
+读 `<项目>/<skills目录>/wewrite-style/SKILL.md` 与 `references/onboard.md`，按 Phase 1–4
+问用户，写入 `<项目>/.wewrite/style.yaml`。
+
+验收：`style.yaml` 存在，`wewrite diagnose` 不再报 style 缺失。
+
+### 8. 可选：发布与配图
+
+- 发布：微信公众号 appid/secret 写进 `<项目>/.wewrite/config.yaml` 的 `wechat` 段。
+- 配图：图片 provider 的 key 写进 `image.providers`；没配就降级成只给提示词。
+- 两项都不配也能用：写稿、审稿、模板排版、本地预览、`copy_page.py` 生成一键复制页手动粘贴进公众号编辑器。
+
+### 禁止事项
+
+- 不把 appid / secret / api key 写进仓库文件或任何提交（`.gitignore` 已排除 `config.yaml`）。
+- 用户没明确说"推到草稿箱"就不执行 `wewrite publish`。
+- 不跑 `tools/sync_skills.py --to project`：它会用仓库覆盖项目里更新的 skill 和主题。
+- 不擅自 `uv tool upgrade wewrite`：会覆盖 site-packages 里的本地补丁，升级前先确认
+  `patch_*.py` 是否需要重跑。
+
+### 交付清单
+
+装完把这些结果一次性给用户：
+
+| 项 | 怎么取证 |
+|---|---|
+| CLI 版本 | `wewrite --version` 的输出 |
+| 状态目录 | `wewrite home` 的输出 |
+| skills / 主题数量 | 12 个 skill 目录、12 个主题 yaml |
+| 排版链路 | `_setup-check.html` 生成过且含内联样式 |
+| 风格配置 | `style.yaml` 已生成 |
+| 能不能发布 | 凭证配了 / 没配（没配就走手动粘贴） |
+
+---
+
 ## 模板体系：模板（结构）× 主题（配色）
 
 排版的核心设计是**两个正交维度**，先定模板、再配主题：
@@ -54,33 +175,17 @@
 三项（`cover_style` 是没人读的失效字段、`playbook.md` 缺失导致口头纠正学不到、`content_eval`
 字数口径与闸门不一致）。
 
-## 安装
+## 维护这个仓库
+
+这是源码仓，内容项目里的改动要回灌才有意义：
 
 ```bash
-# 1. 安装上游 CLI 运行时（skills 的确定性操作都走它）
-uv tool install wewrite
-
-# 2. 把 skills 拷进你的 Agent skills 目录（按你所用 Agent 的约定，如 .pi/skills/ 或 .claude/skills/）
-git clone https://github.com/Imzl-zl/wechat-writing-skills.git
-cp -r wechat-writing-skills/skills/* <你的项目>/.pi/skills/
-
-# 3. 初始化状态目录（文章任务、主题、历史都在这里，项目自包含）
-mkdir -p <你的项目>/.wewrite/themes && export WEWRITE_HOME=<你的项目>/.wewrite
-cp wechat-writing-skills/themes/*.yaml <你的项目>/.wewrite/themes/
-
-# 4. 首次使用：对 Agent 说"设置公众号风格"
+python tools/sync_skills.py --check       # 只查差异，不写文件
+python tools/sync_skills.py --to repo     # 项目 → 仓库（回灌）
+python tools/sync_skills.py --to project  # 仓库 → 项目（覆盖项目里的新版，确认仓库更新再用）
 ```
 
-装完先验一次 `wewrite --version`。如果提示命令不存在（uv 装好了但 shim 没落到 PATH 上），
-跑 `uv tool install --force wewrite` 重建，或直接用
-`$(uv tool dir)/wewrite/Scripts/wewrite.exe`。
-
-本仓库是源码仓，内容项目里的改动要回灌才有意义：`python tools/sync_skills.py --check`
-看差异，`--to repo` 从项目回灌仓库，`--to project` 从仓库铺到项目（会覆盖项目里的新版，
-除非确认仓库更新，否则别用）。
-
-草稿箱发布需要微信公众号 appid/secret（只存本地 `config.yaml`，不要提交到任何仓库）。
-不配凭证也能用：本地预览 + 一键复制页面，手动粘贴到公众号编辑器。
+`themes/showcase.html` 只存在于仓库侧，不参与同步。
 
 ## 致谢
 
