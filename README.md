@@ -62,9 +62,9 @@ uv tool install wewrite      # 本仓库在 4.2.1 上验证
 2. 目录在 PATH 里但仍找不到 → `uv tool install --force wewrite` 重建启动器（shim）。
 3. 还不行 → 用 `uv tool dir --bin` 拼出 `wewrite.exe` 全路径，后续命令都用全路径。
 4. **这台机器此前给 wewrite 打过补丁时**（`uv tool dir` 下的
-   `wewrite/Lib/site-packages/wewrite/` 里存在 `*.orig`）别用 `--force`——它会重建 venv、
+   `wewrite/Lib/site-packages/wewrite/` 里存在 `*.orig`）优先别用 `--force`——它会重建 venv、
    抹掉补丁。改成把 `wewrite/Scripts/wewrite.exe` 复制进 `uv tool dir --bin` 指的目录，
-   入口就回来了，包不动。
+   入口就回来了，包不动。真要重装，装完必须重跑 `tools/patches/` 里的三个脚本（见第 9 步）。
 
 ### 3. 拷 skills
 
@@ -76,7 +76,16 @@ cp -r wechat-writing-skills/skills/* <项目>/<skills目录>/
 
 验收：目标目录下 **12 个子目录**，且 `<项目>/<skills目录>/wewrite/SKILL.md` 存在。
 
-### 4. 建状态目录 + 主题
+### 4. 写项目 AGENTS.md
+
+把仓库里的 `templates/AGENTS.md` 拷成 `<项目>/AGENTS.md`，替换两个占位符：
+`<SKILLS_DIR>`（第 3 步用的 skills 目录）、`<HOME>`（`.wewrite`）。这份文件装了目录约定、
+Windows 编码前缀、模板≠主题、写≠发布这些规则——**没有它，后面每一步都得靠你临时解释**。
+
+验收：`<项目>/AGENTS.md` 存在，且里面不再出现 `<SKILLS_DIR>` / `<HOME>` 字样。
+用户项目已有 AGENTS.md 时不要覆盖，只合并缺少的条目，冲突处以用户现有内容为准。
+
+### 5. 建状态目录 + 主题
 
 ```bash
 mkdir -p <项目>/.wewrite/themes
@@ -90,7 +99,7 @@ macOS/Linux 写进 shell rc 文件）。
 验收：**新开一个 shell** 跑 `wewrite home`，输出必须等于 `<项目>/.wewrite`。
 style / config / history / runs / 主题全在这个目录里，仓库里没有也不该有。
 
-### 5. 自检
+### 6. 自检
 
 ```bash
 wewrite diagnose
@@ -99,10 +108,10 @@ wewrite diagnose
 验收：`Python Packages` 不报 FAIL，退出码 0。全新机器上会看到这些 **WARN，全部正常**，
 不要停下来"修"：
 `Config File`（还没 config.yaml）、`Wechat Credentials`、`Image Api Key`、`Style File`
-（第 7 步才生成）、`Playbook`、`History Articles`。**只有 FAIL 才需要处理**。
+（第 8 步才生成）、`Playbook`、`History Articles`。**只有 FAIL 才需要处理**。
 Windows 上 `Config Permissions` 的 `chmod 600` 警告同样可忽略。
 
-### 6. 跑通排版（模板层是否真生效的判据）
+### 7. 跑通排版（模板层是否真生效的判据）
 
 ```bash
 python <项目>/<skills目录>/wewrite-publish/scripts/apply_template.py <临时>.md --template kazk-editorial -o <临时>-deco.md
@@ -113,14 +122,29 @@ wewrite preview <临时>-deco.md --theme kazk-editorial --no-open -o <项目>/_s
 **只跑 `preview` 不跑 `apply_template.py` 不算通过**——那样出来的是纯换色主题，结构没生效。
 验收后删掉临时文件和 `_setup-check.html`。
 
-### 7. 首次风格设置（必须和用户对话）
+### 8. 首次风格设置（必须和用户对话）
 
 读 `<项目>/<skills目录>/wewrite-style/SKILL.md` 与 `references/onboard.md`，按 Phase 1–4
 问用户，写入 `<项目>/.wewrite/style.yaml`。
 
 验收：`style.yaml` 存在，`wewrite diagnose` 不再报 style 缺失。
 
-### 8. 可选：发布与配图
+### 9. 可选：打补丁（用户要那两个免费图源，或机器以前打过补丁时才做）
+
+`tools/patches/` 里三个脚本改的是 CLI 的 site-packages：新增 sensenova / modelscope 两个免费
+图源、修 `run finish` 的来源计数、修 `publish` 的摘要日志。不打也能正常写和排版。
+
+```bash
+python tools/patches/patch_image_providers.py --check
+python tools/patches/patch_run_finish.py --check
+python tools/patches/patch_publish_digest_log.py --check
+```
+
+验收：三条都打印「补丁状态: 已应用」。报「未应用」就去掉 `--check` 重跑（幂等）。
+报「找不到锚点」说明 CLI 改了函数结构，停下来人工核对，**不要**硬改或绕过。
+用户不需要那两个免费图源时跳过本步，并在交付清单里写明"未打补丁"。
+
+### 10. 可选：发布与配图
 
 - 发布：微信公众号 appid/secret 写进 `<项目>/.wewrite/config.yaml` 的 `wechat` 段。
 - 配图：图片 provider 的 key 写进 `image.providers`；没配就降级成只给提示词。
@@ -131,8 +155,8 @@ wewrite preview <临时>-deco.md --theme kazk-editorial --no-open -o <项目>/_s
 - 不把 appid / secret / api key 写进仓库文件或任何提交（`.gitignore` 已排除 `config.yaml`）。
 - 用户没明确说"推到草稿箱"就不执行 `wewrite publish`。
 - 不跑 `tools/sync_skills.py --to project`：它会用仓库覆盖项目里更新的 skill 和主题。
-- 不擅自 `uv tool upgrade wewrite`：会覆盖 site-packages 里的本地补丁，升级前先确认
-  `patch_*.py` 是否需要重跑。
+- 不擅自 `uv tool upgrade wewrite`：升级会覆盖 site-packages 里的本地补丁。升完必须跑
+  `tools/patches/*.py --check`，报未应用就重跑，别假装补丁还在。
 
 ### 交付清单
 
@@ -143,9 +167,25 @@ wewrite preview <临时>-deco.md --theme kazk-editorial --no-open -o <项目>/_s
 | CLI 版本 | `wewrite --version` 的输出 |
 | 状态目录 | `wewrite home` 的输出 |
 | skills / 主题数量 | 12 个 skill 目录、12 个主题 yaml |
+| 项目约定 | `<项目>/AGENTS.md` 已生成，占位符已替换 |
 | 排版链路 | `_setup-check.html` 生成过且含内联样式 |
 | 风格配置 | `style.yaml` 已生成 |
+| 补丁状态 | 三个 `--check` 都是"已应用"，或明确写"未打补丁" |
 | 能不能发布 | 凭证配了 / 没配（没配就走手动粘贴） |
+
+---
+
+## 仓库里还有什么
+
+| 路径 | 是什么 | 要不要装 |
+|---|---|---|
+| `skills/` | 12 个 skill | 要，第 3 步 |
+| `themes/` | 12 套配色 yaml | 要，第 5 步 |
+| `templates/AGENTS.md` | 内容项目的规则模板（目录约定、编码、模板≠主题、写≠发布） | 要，第 4 步 |
+| `tools/patches/` | 给 CLI 打的三处补丁（两个免费图源、`run finish` 计数、`publish` 摘要日志） | 可选，第 9 步 |
+| `tools/sync_skills.py` | 仓库 ↔ 内容项目的双向同步 | 只在维护本仓库时要 |
+| `themes/showcase.html` | 11 模板 × 18 配色的可视化矩阵 | 只看效果时打开 |
+| `docs/known-issues-*.md` | 已修与未修问题的实测记录 | 遇到怪现象先翻这个 |
 
 ---
 
@@ -192,7 +232,8 @@ python tools/sync_skills.py --to repo     # 项目 → 仓库（回灌）
 python tools/sync_skills.py --to project  # 仓库 → 项目（覆盖项目里的新版，确认仓库更新再用）
 ```
 
-`themes/showcase.html` 只存在于仓库侧，不参与同步。
+`themes/showcase.html`、`templates/`、`tools/` 只存在于仓库侧，不参与同步——项目里的
+`AGENTS.md` 是从模板派生出去的，`.wewrite/tools/` 那份补丁脚本和 `tools/patches/` 保持同一份内容。
 
 ## 致谢
 
